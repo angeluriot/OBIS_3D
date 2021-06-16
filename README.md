@@ -30,6 +30,8 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 
 Ce programme est un projet scolaire pour Polytech Paris-Saclay dans le cadre des cours de Java, d'interaction Homme-machine et d'informatique graphique.
 
+<br/>
+
 # Crédits
 
 * [**Angel Uriot**](https://github.com/angeluriot) : Co-créateur du projet.
