@@ -36,4 +36,4 @@ Ce programme est un projet scolaire pour Polytech Paris-Saclay dans le cadre des
 # Crédits
 
 * [**Angel Uriot**](https://github.com/angeluriot) : Co-créateur du projet.
-* [**Arthur Azambre**]() : Co-créateur du projet.
+* [**Arthur Azambre**](https://github.com/arthurazambre) : Co-créateur du projet.
