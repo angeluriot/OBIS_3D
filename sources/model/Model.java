@@ -1,16 +1,20 @@
 package model;
 
+import features.Feature;
 import features.FeatureCollection;
+import data.Read;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 
 public class Model
 {
-	private FeatureCollection[] species_feature_collection;
+	private ArrayList<FeatureCollection> species_feature_collection;
 	
 	public Model()
 	{
-		species_feature_collection = new FeatureCollection[]{};
+		species_feature_collection = new ArrayList<>();
+		species_feature_collection.add(Read.parseCollectionJson("Delphinidae.json", "Delphinidae"));
 	}
 	
 	public final FeatureCollection get_feature_collection(String specie)
@@ -21,12 +25,36 @@ public class Model
 		
 		return null;
 	}
-	
-	public int get_occurrence(String geohash, String specie)
+
+	public int get_local_occurrence(double lat, double lon)
 	{
-		int occurrence = 0;
+		int res = 0;
+		FeatureCollection collection = species_feature_collection.get(0);
+
+		for(Feature f : collection.get_features())
+		{
+			Point2D point_min = f.get_zone().get_coords()[0];
+			Point2D point_max = f.get_zone().get_coords()[2];
+			if(lat > point_min.getX() && lat < point_max.getX()
+			&& lon > point_min.getY() && lon < point_max.getY())
+				res += f.get_number();
+		}
+
+		return res;
+	}
+	
+	public int get_occurrence(double lat, double lon, int geohash_precision, String specie)
+	{
+		int res = 0;
+		String geohash = gps_to_geohash((float) lon, (float) lat, geohash_precision);
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&geometry=" + geohash;
-		return occurrence;
+
+		FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
+
+		for(Feature f : collection.get_features())
+			res += f.get_number();
+
+		return res;
 	}
 	
 	public final ArrayList<String> get_species(String begin)

@@ -4,6 +4,12 @@ public class FeatureCollection
 {
 	private String name;
 	private Feature[] features;
+
+	public FeatureCollection(String name, Feature[] features)
+	{
+		this.name = name;
+		this.features = features;
+	}
 	
 	public final String get_name()
 	{
