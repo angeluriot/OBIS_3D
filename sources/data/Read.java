@@ -95,13 +95,13 @@ public class Read
 				JSONArray coordinates = coordinates_base.getJSONArray(0);
 				JSONArray coordinates_1 = coordinates.getJSONArray(0);
 
-				Point2D point_1 = new Point2D(coordinates_1.getDouble(0), coordinates_1.getDouble(1));
+				Point2D point_1 = new Point2D(coordinates_1.getDouble(1), coordinates_1.getDouble(0));
 				JSONArray coordinates_2 = coordinates.getJSONArray(1);
-				Point2D point_2 = new Point2D(coordinates_2.getDouble(0), coordinates_2.getDouble(1));
+				Point2D point_2 = new Point2D(coordinates_2.getDouble(1), coordinates_2.getDouble(0));
 				JSONArray coordinates_3 = coordinates.getJSONArray(2);
-				Point2D point_3 = new Point2D(coordinates_3.getDouble(0), coordinates_3.getDouble(1));
+				Point2D point_3 = new Point2D(coordinates_3.getDouble(1), coordinates_3.getDouble(0));
 				JSONArray coordinates_4 = coordinates.getJSONArray(3);
-				Point2D point_4 = new Point2D(coordinates_4.getDouble(0), coordinates_4.getDouble(1));
+				Point2D point_4 = new Point2D(coordinates_4.getDouble(1), coordinates_4.getDouble(0));
 				JSONObject properties = features2.getJSONObject("properties");
 				features_list.add(new Feature(properties.getInt("n"),
 								  new Zone(point_1, point_2, point_3, point_4)));
@@ -130,13 +130,13 @@ public class Read
 			JSONArray coordinates = coordinates_base.getJSONArray(0);
 			JSONArray coordinates_1 = coordinates.getJSONArray(0);
 
-			Point2D point_1 = new Point2D(coordinates_1.getDouble(0), coordinates_1.getDouble(1));
+			Point2D point_1 = new Point2D(coordinates_1.getDouble(1), coordinates_1.getDouble(0));
 			JSONArray coordinates_2 = coordinates.getJSONArray(1);
-			Point2D point_2 = new Point2D(coordinates_2.getDouble(0), coordinates_2.getDouble(1));
+			Point2D point_2 = new Point2D(coordinates_2.getDouble(1), coordinates_2.getDouble(0));
 			JSONArray coordinates_3 = coordinates.getJSONArray(2);
-			Point2D point_3 = new Point2D(coordinates_3.getDouble(0), coordinates_3.getDouble(1));
+			Point2D point_3 = new Point2D(coordinates_3.getDouble(1), coordinates_3.getDouble(0));
 			JSONArray coordinates_4 = coordinates.getJSONArray(3);
-			Point2D point_4 = new Point2D(coordinates_4.getDouble(0), coordinates_4.getDouble(1));
+			Point2D point_4 = new Point2D(coordinates_4.getDouble(1), coordinates_4.getDouble(0));
 			JSONObject properties = features2.getJSONObject("properties");
 			features_list.add(new Feature(properties.getInt("n"),
 					new Zone(point_1, point_2, point_3, point_4)));

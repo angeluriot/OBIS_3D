@@ -4,6 +4,7 @@ import features.Feature;
 import features.FeatureCollection;
 import data.Read;
 import javafx.geometry.Point2D;
+import utils.Time;
 
 import java.util.ArrayList;
 
@@ -46,13 +47,60 @@ public class Model
 	public int get_occurrence(double lat, double lon, int geohash_precision, String specie)
 	{
 		int res = 0;
-		String geohash = gps_to_geohash((float) lon, (float) lat, geohash_precision);
+		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&geometry=" + geohash;
 
 		FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
 
 		for(Feature f : collection.get_features())
 			res += f.get_number();
+
+		return res;
+	}
+
+	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
+	public int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
+							  String end_date)
+	{
+		int res = 0;
+		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
+		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&startdate=" + start_date
+				+ "&enddate=" + end_date + "&geometry=" + geohash;
+
+		FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
+
+		for(Feature f : collection.get_features())
+			res += f.get_number();
+
+		return res;
+	}
+
+	public ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
+							  String interval, int interval_nb)
+	{
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
+		String url;
+		Time start_time = new Time(start_date);
+		Time interval_time = new Time(interval);
+		Time end_time = new Time(start_time);
+		end_time.add_interval(interval_time);
+
+		for(int i = 0; i < interval_nb; i++)
+		{
+			res.add(0);
+			int compt = 0;
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&startdate=" +
+					start_time.get_date() + "&enddate=" + end_time.get_date()+ "&geometry=" + geohash;
+			System.out.println(url);
+			FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
+
+			for(Feature f : collection.get_features())
+				compt += f.get_number();
+			res.set(i, compt);
+			start_time.add_interval(interval_time);
+			end_time.add_interval(interval_time);
+		}
 
 		return res;
 	}
