@@ -3,24 +3,29 @@ package application;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import model.Model;
+import scene3d.Earth;
 
 import java.util.ArrayList;
 
 public class Main extends Application
 {
 	@Override
-	public void start(Stage primaryStage) throws Exception
+	public void start(Stage stage) throws Exception
 	{
-		/*
-		Parent root = FXMLLoader.load(getClass().getResource(""));
-		primaryStage.setTitle("Hello World");
-		primaryStage.setScene(new Scene(root, 300, 275));
-		primaryStage.show();
-		 */
+		Parent root = FXMLLoader.load(getClass().getResource("application.fxml"));
+		
+		Earth.handle_events(stage);
+		
+		stage.setTitle("OBIS 3D");
+		stage.setScene(new Scene(root, 1200, 700));
+		stage.setMinWidth(400);
+		stage.setMinHeight(400);
+		stage.show();
 	}
 	
 	public static void main(String[] args)
