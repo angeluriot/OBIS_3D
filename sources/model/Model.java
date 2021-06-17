@@ -15,7 +15,7 @@ public class Model
 	public Model()
 	{
 		species_feature_collection = new ArrayList<>();
-		species_feature_collection.add(Read.parseCollectionJson("Delphinidae.json", "Delphinidae"));
+		species_feature_collection.add(Read.parseCollectionJson("resources/data/Delphinidae.json", "Delphinidae"));
 	}
 	
 	public final FeatureCollection get_feature_collection(String specie)
