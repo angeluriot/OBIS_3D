@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import features.Feature;
 import features.FeatureCollection;
+import utils.Observation;
 
 import java.io.*;
 import java.net.URI;
@@ -89,8 +90,8 @@ public class Read
 
 			for(int i = 0; i < features.length(); i++)
 			{
-				JSONObject features2 = features.getJSONObject(i);
-				JSONObject geometry = features2.getJSONObject("geometry");
+				JSONObject feature = features.getJSONObject(i);
+				JSONObject geometry = feature.getJSONObject("geometry");
 				JSONArray coordinates_base = geometry.getJSONArray("coordinates");
 				JSONArray coordinates = coordinates_base.getJSONArray(0);
 				JSONArray coordinates_1 = coordinates.getJSONArray(0);
@@ -102,7 +103,7 @@ public class Read
 				Point2D point_3 = new Point2D(coordinates_3.getDouble(1), coordinates_3.getDouble(0));
 				JSONArray coordinates_4 = coordinates.getJSONArray(3);
 				Point2D point_4 = new Point2D(coordinates_4.getDouble(1), coordinates_4.getDouble(0));
-				JSONObject properties = features2.getJSONObject("properties");
+				JSONObject properties = feature.getJSONObject("properties");
 				features_list.add(new Feature(properties.getInt("n"),
 								  new Zone(point_1, point_2, point_3, point_4)));
 			}
@@ -124,8 +125,8 @@ public class Read
 		JSONArray features = json.getJSONArray("features");
 
 		for (int i = 0; i < features.length(); i++) {
-			JSONObject features2 = features.getJSONObject(i);
-			JSONObject geometry = features2.getJSONObject("geometry");
+			JSONObject feature = features.getJSONObject(i);
+			JSONObject geometry = feature.getJSONObject("geometry");
 			JSONArray coordinates_base = geometry.getJSONArray("coordinates");
 			JSONArray coordinates = coordinates_base.getJSONArray(0);
 			JSONArray coordinates_1 = coordinates.getJSONArray(0);
@@ -137,7 +138,7 @@ public class Read
 			Point2D point_3 = new Point2D(coordinates_3.getDouble(1), coordinates_3.getDouble(0));
 			JSONArray coordinates_4 = coordinates.getJSONArray(3);
 			Point2D point_4 = new Point2D(coordinates_4.getDouble(1), coordinates_4.getDouble(0));
-			JSONObject properties = features2.getJSONObject("properties");
+			JSONObject properties = feature.getJSONObject("properties");
 			features_list.add(new Feature(properties.getInt("n"),
 					new Zone(point_1, point_2, point_3, point_4)));
 		}
@@ -146,5 +147,50 @@ public class Read
 
 		return new FeatureCollection(name, feature_array);
 
+	}
+
+	public static ArrayList<Observation> parseObservationJson(JSONObject json)
+	{
+		ArrayList<Observation> observations = new ArrayList<>();
+		JSONArray results = json.getJSONArray("results");
+
+		for (int i = 0; i < results.length(); i++)
+		{
+			JSONObject result = results.getJSONObject(i);
+			String scientific_name = result.getString("scientificName");
+			String order;
+			try
+			{
+				order = result.getString("order");
+			}
+			catch(Exception e)
+			{
+				order = "";
+			}
+			String super_class = result.getString("superclass");
+			String recorded_by;
+			try
+			{
+				recorded_by = result.getString("recordedBy");
+			}
+			catch(Exception e)
+			{
+				recorded_by = "";
+			}
+
+			String specie;
+			try
+			{
+				specie = result.getString("species");
+			}
+			catch(Exception e)
+			{
+				specie = "";
+			}
+
+			observations.add(new Observation(scientific_name, order, super_class, recorded_by, specie));
+		}
+
+		return observations;
 	}
 }

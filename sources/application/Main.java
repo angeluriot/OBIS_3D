@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import model.Model;
 import scene3d.Earth;
+import utils.Observation;
 
 import java.util.ArrayList;
 
@@ -32,20 +33,25 @@ public class Main extends Application
 	{
 		Model model = new Model();
 
-		int test = model.get_local_occurrence(33., -79.);
+		int test = Model.get_local_occurrence(33., -79.);
 		System.out.println(test);
 
-		int test2 = model.get_occurrence(33., -79., 3, "Delphinidae");
+		System.out.println(Model.get_min_occurrence());
+		System.out.println(Model.get_max_occurrence());
+
+		int test2 = Model.get_occurrence(33., -79., 3, "Selachii");
 		System.out.println(test2);
 
-		int test3 = model.get_occurrence(33., -79., 3, "Delphinidae", "2015-06-17",
+		int test3 = Model.get_occurrence(33., -79., 3, "Selachii", "2015-06-17",
 				"2021-06-17");
 		System.out.println(test3);
 
-		ArrayList<Integer> test4 = model.get_occurrence(33., -79., 3, "Delphinidae",
+		ArrayList<Integer> test4 = Model.get_occurrence(33., -79., 3, "Selachii",
 				"2015-07-17", "0000-00-05", 7);
 		System.out.println(test4.get(0));
 
+		ArrayList<Observation> test5 = Model.get_observation("spd", "Selachii");
+		System.out.println(test5.get(0));
 		launch(args);
 	}
 }

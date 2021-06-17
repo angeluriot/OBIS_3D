@@ -4,35 +4,31 @@ import features.Feature;
 import features.FeatureCollection;
 import data.Read;
 import javafx.geometry.Point2D;
+import utils.Observation;
 import utils.Time;
 
 import java.util.ArrayList;
 
 public class Model
 {
-	private ArrayList<FeatureCollection> species_feature_collection;
+	private static FeatureCollection species_feature_collection;
 	
 	public Model()
 	{
-		species_feature_collection = new ArrayList<>();
-		species_feature_collection.add(Read.parseCollectionJson("resources/data/Delphinidae.json", "Delphinidae"));
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
+				"resources/data/Delphinidae.json", "Delphinidae"));
 	}
 	
-	public final FeatureCollection get_feature_collection(String specie)
+	public static final FeatureCollection get_feature_collection(String specie)
 	{
-		for (FeatureCollection collection : species_feature_collection)
-			if (collection.get_name().equals(specie))
-				return collection;
-		
-		return null;
+		return species_feature_collection;
 	}
 
-	public int get_local_occurrence(double lat, double lon)
+	public static int get_local_occurrence(double lat, double lon)
 	{
 		int res = 0;
-		FeatureCollection collection = species_feature_collection.get(0);
 
-		for(Feature f : collection.get_features())
+		for(Feature f : species_feature_collection.get_features())
 		{
 			Point2D point_min = f.get_zone().get_coords()[0];
 			Point2D point_max = f.get_zone().get_coords()[2];
@@ -44,7 +40,7 @@ public class Model
 		return res;
 	}
 	
-	public int get_occurrence(double lat, double lon, int geohash_precision, String specie)
+	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie)
 	{
 		int res = 0;
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
@@ -59,7 +55,7 @@ public class Model
 	}
 
 	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
-	public int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
+	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
 							  String end_date)
 	{
 		int res = 0;
@@ -75,7 +71,7 @@ public class Model
 		return res;
 	}
 
-	public ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
+	public static ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
 							  String interval, int interval_nb)
 	{
 		ArrayList<Integer> res = new ArrayList<Integer>();
@@ -92,7 +88,6 @@ public class Model
 			int compt = 0;
 			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&startdate=" +
 					start_time.get_date() + "&enddate=" + end_time.get_date()+ "&geometry=" + geohash;
-			System.out.println(url);
 			FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
 
 			for(Feature f : collection.get_features())
@@ -104,7 +99,18 @@ public class Model
 
 		return res;
 	}
-	
+
+	public static ArrayList<Observation> get_observation(String geohash, String scientific_name)
+	{
+		String url = "https://api.obis.org/v3/occurrence?";
+		if(scientific_name.length() > 0)
+			url += ("scientificname=" + scientific_name + "&amp;");
+		url += ("geometry=" + geohash);
+
+		return Read.parseObservationJson(Read.readJsonFromUrl(url));
+	}
+
+	/*
 	public final ArrayList<String> get_species(String begin)
 	{
 		ArrayList<String> species_list = new ArrayList<>();
@@ -122,6 +128,39 @@ public class Model
 		}
 		
 		return species_list;
+	}
+
+	 */
+
+	public static final int get_min_occurrence()
+	{
+		int min = Integer.MAX_VALUE;
+
+		for (Feature feature : species_feature_collection.get_features())
+		{
+			int number = feature.get_number();
+
+			if (number < min)
+				min = number;
+		}
+
+		return min;
+	}
+
+	public static final int get_max_occurrence()
+	{
+		int max = 0;
+
+		for (Feature feature : species_feature_collection.get_features())
+		{
+			int number = feature.get_number();
+
+			if (number > max)
+				max = number;
+
+		}
+
+		return max;
 	}
 	
 	public static String gps_to_geohash(float lat, float lon, float precision)

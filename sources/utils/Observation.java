@@ -7,6 +7,15 @@ public class Observation
 	private String super_class;
 	private String recorded_by;
 	private String specie;
+
+	public Observation(String scientific_name, String order, String super_class, String recorded_by, String specie)
+	{
+		this.scientific_name = scientific_name;
+		this.order = order;
+		this.super_class = super_class;
+		this.recorded_by = recorded_by;
+		this.specie = specie;
+	}
 	
 	public final String get_scientific_name()
 	{
@@ -31,5 +40,15 @@ public class Observation
 	public final String get_specie()
 	{
 		return specie;
+	}
+
+	@Override
+	public String toString()
+	{
+		return  "Nom scientifique : " + scientific_name +
+				"\nOrdre : " + order +
+				"\nSuper classe : " + super_class +
+				"\nEnregistre par : " + recorded_by +
+				"\nEspece : " + specie;
 	}
 }
