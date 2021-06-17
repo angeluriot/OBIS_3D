@@ -2,6 +2,7 @@ package scene3d;
 
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
+import features.FeatureCollection;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.layout.HBox;
@@ -16,12 +17,15 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
+import model.Model;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Earth
 {
+	private static final float ZONE_SIZE = 360.f / 50.f;
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
 	private static SubScene sub_scene;
@@ -52,12 +56,9 @@ public class Earth
 		root.getChildren().add(earth);
 		
 		meshViews[0].setTranslateX(-1);
-		meshViews[0].setScaleX(0.99);
-		meshViews[0].setScaleY(0.99);
-		meshViews[0].setScaleZ(0.99);
-		
-		// Draw city on the earth
-		display_town(earth, "earth", 43.435555f, 5.213611f);
+		meshViews[0].setScaleX(0.999);
+		meshViews[0].setScaleY(0.999);
+		meshViews[0].setScaleZ(0.999);
 		
 		// Add a camera group
 		PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -76,6 +77,7 @@ public class Earth
 		ambientLight.getScope().addAll(root);
 		root.getChildren().add(ambientLight);
 		
+		// Add sub scene
 		sub_scene = new SubScene(root, 600, 600, true, SceneAntialiasing.BALANCED);
 		sub_scene.setCamera(camera);
 		sub_scene.setFill(Color.GRAY);
@@ -83,27 +85,7 @@ public class Earth
 		pane.getChildren().add(root);
 		
 		// Add a quadrilateral
-		add_quadrilateral_map(earth);
-	}
-	
-	public static Cylinder create_line(Point3D origin, Point3D target)
-	{
-		Point3D y_axis = new Point3D(0, 1, 0);
-		Point3D diff = target.subtract(origin);
-		double height = diff.magnitude();
-		
-		Point3D mid = target.midpoint(origin);
-		Translate move_to_midpoint = new Translate(mid.getX(), mid.getY(), mid.getZ());
-		
-		Point3D axis_of_rotation = diff.crossProduct(y_axis);
-		double angle = Math.acos(diff.normalize().dotProduct(y_axis));
-		Rotate rotate_around_center = new Rotate(-Math.toDegrees(angle), axis_of_rotation);
-		
-		Cylinder line = new Cylinder(0.01f, height);
-		
-		line.getTransforms().addAll(move_to_midpoint, rotate_around_center);
-		
-		return line;
+		show_data_quadrilaterals(earth);
 	}
 	
 	public static Point3D geo_coord_to_3d_coord(float lat, float lon, float height)
@@ -113,23 +95,29 @@ public class Earth
 		
 		return new Point3D(
 			-java.lang.Math.sin(java.lang.Math.toRadians(lon_cor)) * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)),
-			-java.lang.Math.sin(java.lang.Math.toRadians(lat_cor)) - height * java.lang.Math.sin(java.lang.Math.toRadians(lat_cor)) / 50,
+			-java.lang.Math.sin(java.lang.Math.toRadians(lat_cor)),
 			java.lang.Math.cos(java.lang.Math.toRadians(lon_cor)) * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
 	}
 	
-	public static void display_town(Group parent, String name, float lat, float lon)
+	private static PhongMaterial get_color(float lat, float lon)
 	{
-		Sphere sphere = new Sphere(0.01);
-		Point3D coords3D = geo_coord_to_3d_coord(lat, lon, 0.f);
+		final int min = 0;
+		final int max = 30;
+		final int number = Math.max(0, ThreadLocalRandom.current().nextInt(-60, 30));
 		
-		sphere.setTranslateX(coords3D.getX() - 1);
-		sphere.setTranslateY(coords3D.getY());
-		sphere.setTranslateZ(coords3D.getZ());
-		parent.getChildren().add(sphere);
+		if (number == 0)
+			return null;
+		
+		final int color_nb = (int)(((float)(number - min) / (float)(max - min)) * 8);
+		
+		return new PhongMaterial(new Color(1, (float)color_nb / 8, 0, 0.5));
 	}
 	
-	private static void add_quadrilateral(Group parent, Point3D top_right, Point3D bottom_right, Point3D bottom_left, Point3D top_left, PhongMaterial material)
+	private static void add_quadrilateral(Group parent, Point3D top_left, Point3D top_right, Point3D bottom_right, Point3D bottom_left, PhongMaterial material)
 	{
+		if (material == null)
+			return;
+		
 		final TriangleMesh triangle_mesh = new TriangleMesh();
 		
 		final float[] points =
@@ -164,38 +152,15 @@ public class Earth
 		parent.getChildren().addAll(mesh_view);
 	}
 	
-	private static void add_quadrilateral_map(Group earth)
+	private static void show_data_quadrilaterals(Group earth)
 	{
-		PhongMaterial phong_red = new PhongMaterial(Color.RED);
-		PhongMaterial phong_green = new PhongMaterial(Color.GREEN);
-		
-		for (float i = 0; i < 360; i += 4)
-			for (float j = 0; j < 360; j += 4)
-			{
-				add_quadrilateral(earth, geo_coord_to_3d_coord(i + 2 - 180, j, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i - 180, j, 1),
-						phong_red);
-				
-				add_quadrilateral(earth, geo_coord_to_3d_coord(i + 2 + 2 - 180, j, 1),
-						geo_coord_to_3d_coord(i + 2 + 2 - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j, 1),
-						phong_green);
-				
-				add_quadrilateral(earth, geo_coord_to_3d_coord(i + 2 - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j + 2 + 2, 1),
-						geo_coord_to_3d_coord(i - 180, j + 2 + 2, 1),
-						geo_coord_to_3d_coord(i - 180, j + 2, 1),
-						phong_green);
-				
-				add_quadrilateral(earth, geo_coord_to_3d_coord(i + 2 + 2 - 180, j + 2, 1),
-						geo_coord_to_3d_coord(i + 2 + 2 - 180, j + 2 + 2, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j + 2 + 2, 1),
-						geo_coord_to_3d_coord(i + 2 - 180, j + 2, 1),
-						phong_red);
-			}
+		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
+			for (float lon = 0; lon < 360; lon += ZONE_SIZE)
+				add_quadrilateral(earth, geo_coord_to_3d_coord(lat, lon, 1),
+					geo_coord_to_3d_coord(lat , lon + ZONE_SIZE, 1),
+					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon + ZONE_SIZE, 1),
+					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon, 1),
+					get_color(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2));
 	}
 	
 	public static void handle_events(Stage stage)
