@@ -17,11 +17,10 @@ public class Main extends Application
 	{
 		Parent root = FXMLLoader.load(getClass().getResource("application.fxml"));
 		
-		Scene scene = new Scene(root, 1200, 700);
-		Earth.init();
+		Earth.handle_events(stage);
 		
 		stage.setTitle("OBIS 3D");
-		stage.setScene(scene);
+		stage.setScene(new Scene(root, 1200, 700));
 		stage.setMinWidth(400);
 		stage.setMinHeight(400);
 		stage.show();

@@ -4,6 +4,7 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -23,13 +24,14 @@ public class Earth
 {
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
-	public static SubScene scene;
-	public static Pane pane;
-	public static Group root;
-	public static SubScene sub_scene;
+	private static SubScene sub_scene;
+	private static Pane pane;
 	
-	public static void init()
+	public static void init(Pane pane3D)
 	{
+		pane = pane3D;
+		Group root = new Group();
+		
 		// Load geometry
 		ObjModelImporter obj_importer = new ObjModelImporter();
 		
@@ -48,6 +50,11 @@ public class Earth
 		MeshView[] meshViews = obj_importer.getImport();
 		Group earth = new Group(meshViews);
 		root.getChildren().add(earth);
+		
+		meshViews[0].setTranslateX(-1);
+		meshViews[0].setScaleX(0.99);
+		meshViews[0].setScaleY(0.99);
+		meshViews[0].setScaleZ(0.99);
 		
 		// Draw city on the earth
 		display_town(earth, "earth", 43.435555f, 5.213611f);
@@ -69,12 +76,14 @@ public class Earth
 		ambientLight.getScope().addAll(root);
 		root.getChildren().add(ambientLight);
 		
+		sub_scene = new SubScene(root, 600, 600, true, SceneAntialiasing.BALANCED);
+		sub_scene.setCamera(camera);
+		sub_scene.setFill(Color.GRAY);
+		pane.getChildren().addAll(sub_scene);
+		pane.getChildren().add(root);
+		
 		// Add a quadrilateral
 		add_quadrilateral_map(earth);
-		
-		// Put the camera in the scene
-		sub_scene.setFill(Color.AQUAMARINE);
-		sub_scene.setCamera(camera);
 	}
 	
 	public static Cylinder create_line(Point3D origin, Point3D target)
@@ -113,7 +122,7 @@ public class Earth
 		Sphere sphere = new Sphere(0.01);
 		Point3D coords3D = geo_coord_to_3d_coord(lat, lon, 0.f);
 		
-		sphere.setTranslateX(coords3D.getX());
+		sphere.setTranslateX(coords3D.getX() - 1);
 		sphere.setTranslateY(coords3D.getY());
 		sphere.setTranslateZ(coords3D.getZ());
 		parent.getChildren().add(sphere);
@@ -151,6 +160,7 @@ public class Earth
 		
 		final MeshView mesh_view = new MeshView(triangle_mesh);
 		mesh_view.setMaterial(material);
+		mesh_view.setTranslateX(-1);
 		parent.getChildren().addAll(mesh_view);
 	}
 	
@@ -186,5 +196,26 @@ public class Earth
 						geo_coord_to_3d_coord(i + 2 - 180, j + 2, 1),
 						phong_red);
 			}
+	}
+	
+	public static void handle_events(Stage stage)
+	{
+		sub_scene.setWidth(stage.getWidth() - 315);
+		sub_scene.setHeight(stage.getHeight());
+		
+		pane.setPrefWidth(stage.getWidth() - 315);
+		pane.setPrefWidth(stage.getHeight());
+		
+		stage.widthProperty().addListener((obs, oldVal, newVal) ->
+		{
+			sub_scene.setWidth(newVal.doubleValue() - 315);
+			pane.setPrefWidth(newVal.doubleValue() - 315);
+		});
+		
+		stage.heightProperty().addListener((obs, oldVal, newVal) ->
+		{
+			sub_scene.setHeight(newVal.doubleValue());
+			pane.setPrefHeight(newVal.doubleValue());
+		});
 	}
 }

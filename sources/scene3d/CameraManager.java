@@ -18,7 +18,7 @@ public class CameraManager {
     private static final double CONTROL_MULTIPLIER = 0.1;
     private static final double SHIFT_MULTIPLIER = 10.0;
     private static final double MOUSE_SPEED = 0.05;
-    private static final double ROTATION_SPEED = 2.0;
+    private static final double ROTATION_SPEED = 0.2;
     private static final double TRACK_SPEED = 0.6;
 
     private final Group cameraXform = new Group();
