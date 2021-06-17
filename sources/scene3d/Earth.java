@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Earth
 {
-	private static final float ZONE_SIZE = 360.f / 50.f;
+	private static final float ZONE_SIZE = 360.f / 256.f;
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
 	private static SubScene sub_scene;
@@ -102,8 +102,8 @@ public class Earth
 	private static PhongMaterial get_color(float lat, float lon)
 	{
 		final int min = 0;
-		final int max = 30;
-		final int number = Math.max(0, ThreadLocalRandom.current().nextInt(-60, 30));
+		final int max = Model.get_max_occurrence();
+		final int number = Model.get_local_occurrence(lat, lon);
 		
 		if (number == 0)
 			return null;
@@ -155,11 +155,11 @@ public class Earth
 	private static void show_data_quadrilaterals(Group earth)
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
-			for (float lon = 0; lon < 360; lon += ZONE_SIZE)
+			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
 				add_quadrilateral(earth, geo_coord_to_3d_coord(lat, lon, 1),
-					geo_coord_to_3d_coord(lat , lon + ZONE_SIZE, 1),
-					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon + ZONE_SIZE, 1),
 					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon, 1),
+					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon + ZONE_SIZE, 1),
+					geo_coord_to_3d_coord(lat, lon + ZONE_SIZE, 1),
 					get_color(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2));
 	}
 	
