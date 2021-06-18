@@ -11,6 +11,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
@@ -47,6 +48,7 @@ public class Earth
 	private static Group squares;
 	private static AnchorPane anchor_pane;
 	private static ListView list_view;
+	private static ListView secondary_list_view;
 	private static HBox hbox;
 	private static boolean first_click = true;
 
@@ -126,23 +128,11 @@ public class Earth
 
 				Point2D position = coord_3d_to_geo_coord(space_coord);
 
-				ArrayList<Observation> observations = Model.get_observation(Model.gps_to_geohash((float)position.getX(), (float)position.getY(), 3));
-				ObservableList<String> list = FXCollections.observableArrayList();
+				if (Model.get_local_occurrence((float)position.getX(), (float)position.getY()) > 0)
+					click_on_data(event, (float)position.getX(), (float)position.getY());
 
-				if (observations.size() > 0)
-				{
-					for (Observation observation : observations)
-						list.add(observation.get_scientific_name());
-
-					list_view = new ListView(list);
-					list_view.setFixedCellSize(30);
-					list_view.setStyle("-fx-font-size : 11pt");
-					list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
-					list_view.setPrefWidth(300);
-					list_view.setTranslateX(event.getSceneX());
-					list_view.setTranslateY(event.getSceneY());
-					anchor_pane.getChildren().add(list_view);
-				}
+				else
+					click_on_void(event, (float)position.getX(), (float)position.getY());
 			}
 		});
 
@@ -157,6 +147,32 @@ public class Earth
 					first_click = false;
 			}
 		});
+	}
+
+	public static void click_on_data(MouseEvent event, float lat, float lon)
+	{
+		ArrayList<Observation> observations = Model.get_observation(Model.gps_to_geohash(lat, lon, 3));
+		ObservableList<String> list = FXCollections.observableArrayList();
+
+		if (observations.size() > 0)
+		{
+			for (Observation observation : observations)
+				list.add(observation.get_scientific_name());
+
+			list_view = new ListView(list);
+			list_view.setFixedCellSize(30);
+			list_view.setStyle("-fx-font-size : 11pt");
+			list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
+			list_view.setPrefWidth(300);
+			list_view.setTranslateX(event.getSceneX());
+			list_view.setTranslateY(event.getSceneY());
+			anchor_pane.getChildren().add(list_view);
+		}
+	}
+
+	public static void click_on_void(MouseEvent event, float lat, float lon)
+	{
+
 	}
 
 	public static void update(int year)
@@ -183,7 +199,6 @@ public class Earth
 	public static Point2D coord_3d_to_geo_coord(Point3D point)
 	{
 		double latitude = (float)(Math.asin(-point.getY()) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
-
 		double longitude = -(Math.atan2(-point.getZ(), -point.getX())) - Math.PI / 2;
 
 		if (longitude < -Math.PI)
@@ -210,46 +225,7 @@ public class Earth
 		return (float)number / (float)Model.get_max_occurrence();
 	}
 
-	private static void add_square(Group parent, Point3D top_left, Point3D top_right, Point3D bottom_right, Point3D bottom_left, PhongMaterial material)
-	{
-		if (material == null)
-			return;
-
-		final TriangleMesh triangle_mesh = new TriangleMesh();
-
-		final float[] points =
-		{
-			(float)top_right.getX(), (float)top_right.getY(), (float)top_right.getZ(),
-			(float)top_left.getX(), (float)top_left.getY(), (float)top_left.getZ(),
-			(float)bottom_left.getX(), (float)bottom_left.getY(), (float)bottom_left.getZ(),
-			(float)bottom_right.getX(), (float)bottom_right.getY(), (float)bottom_right.getZ(),
-		};
-
-		final float[] tex_coords =
-		{
-			1, 1,
-			1, 0,
-			0, 1,
-			0, 0
-		};
-
-		final int[] faces =
-		{
-			0, 1, 1, 0, 2, 2,
-			0, 1, 2, 2, 3, 3
-		};
-
-		triangle_mesh.getPoints().setAll(points);
-		triangle_mesh.getTexCoords().setAll(tex_coords);
-		triangle_mesh.getFaces().setAll(faces);
-
-		final MeshView mesh_view = new MeshView(triangle_mesh);
-		mesh_view.setMaterial(material);
-		mesh_view.setTranslateX(-1);
-		parent.getChildren().addAll(mesh_view);
-	}
-
-	public static void test(Group parent, float lat, float lon, int year)
+	public static void add_square(Group parent, float lat, float lon, int year)
 	{
 		final int number;
 
@@ -281,22 +257,11 @@ public class Earth
 		parent.getChildren().addAll(group);
 	}
 
-	public static void displayTown(Group parent, String name, float lat, float lon)
-	{
-		Sphere sphere = new Sphere(0.01);
-		Point3D coords3D = geo_coord_to_3d_coord(lat, lon, 0.f);
-		sphere.setTranslateX(coords3D.getX() - 1);
-		sphere.setTranslateY(coords3D.getY());
-		sphere.setTranslateZ(coords3D.getZ());
-		parent.getChildren().add(sphere);
-		camera_manager.force_update();
-	}
-
 	private static void show_data_squares(Group parent, int year)
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
 			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
-				test(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2, year);
+				add_square(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2, year);
 	}
 
 	public static void handle_events(Stage stage)
