@@ -4,6 +4,8 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.Point3D;
@@ -20,6 +22,7 @@ import model.Model;
 import org.json.JSONException;
 import scene3d.Earth;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Menu
@@ -31,7 +34,8 @@ public class Menu
 	public static Button play;
 	public static Button pause;
 	public static Button stop;
-	public static double start;
+	public static int start;
+	public static boolean playing = false;
 
 	public static void init()
 	{
@@ -51,7 +55,7 @@ public class Menu
 					Model.set_collection(combobox.getValue().toString());
 					start_date_picker.setValue(null);
 					end_date_picker.setValue(null);
-					Earth.update();
+					Earth.update(-1);
 				}
 			}
 
@@ -60,7 +64,7 @@ public class Menu
 				if (combobox.getValue().toString().equals(""))
 				{
 					Model.init_collection();
-					Earth.update();
+					Earth.update(-1);
 				}
 
 				else
@@ -79,7 +83,7 @@ public class Menu
 			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
 			{
 				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
-				Earth.update();
+				Earth.update(-1);
 			}
 		});
 
@@ -88,7 +92,7 @@ public class Menu
 			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
 			{
 				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
-				Earth.update();
+				Earth.update(-1);
 			}
 		});
 	}
@@ -97,18 +101,30 @@ public class Menu
 	{
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event2 ->
 		{
-			slider.setValue(slider.getValue() + 5);
+			if (playing)
+				slider.setValue(slider.getValue() + 5);
+
+			else
+				playing = true;
+
+			Earth.update((int)slider.getValue());
 		}));
 
-		slider.setOnMouseReleased(event ->
+		timeline.setOnFinished((finish) ->
 		{
-			System.out.println("evolution");
+			slider.setValue(start);
+			Earth.update(-1);
+			playing = false;
+			slider.setDisable(false);
 		});
 
 		play.setOnMouseClicked(event ->
 		{
-			set_start(slider.getValue());
-			timeline.setCycleCount(Animation.INDEFINITE);
+			if (!playing)
+				start = (int)slider.getValue();
+
+			slider.setDisable(true);
+			timeline.setCycleCount((2020 - (int)slider.getValue()) / 5);
 			timeline.play();
 		});
 
@@ -121,11 +137,25 @@ public class Menu
 		{
 			timeline.stop();
 			slider.setValue(start);
+			Earth.update(-1);
+			playing = false;
+			slider.setDisable(false);
 		});
-	}
 
-	public static void set_start(double new_start)
-	{
-		start = new_start;
+		slider.valueProperty().addListener(new ChangeListener<Number>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue)
+			{
+				if (!playing)
+				{
+					if (newValue.intValue() % 5 != 0)
+						slider.setValue(Math.round(newValue.floatValue() / 5f) * 5);
+
+					if (newValue.floatValue() != newValue.intValue())
+						slider.setValue(newValue.intValue());
+				}
+			}
+		});
 	}
 }

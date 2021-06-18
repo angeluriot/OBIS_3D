@@ -92,7 +92,7 @@ public class Earth
 		pane.getChildren().add(root);
 
 		// Initial update
-		update();
+		update(-1);
 		handle_click();
 	}
 
@@ -114,10 +114,10 @@ public class Earth
 		});
 	}
 
-	public static void update()
+	public static void update(int year)
 	{
 		squares.getChildren().clear();
-		show_data_squares(squares);
+		show_data_squares(squares, year);
 
 		Legend.update(Model.get_max_occurrence());
 
@@ -149,10 +149,8 @@ public class Earth
 		return new Point2D(lat, lon);
 	}
 
-	private static PhongMaterial get_color(float lat, float lon)
+	private static PhongMaterial get_color(float lat, float lon, int number)
 	{
-		final int number = Model.get_local_occurrence(lat, lon);
-
 		if (number == 0)
 			return null;
 
@@ -161,9 +159,8 @@ public class Earth
 		return new PhongMaterial(new Color(1, (float)color_nb / 7, 0, 1));
 	}
 
-	private static float get_size(float lat, float lon)
+	private static float get_size(float lat, float lon, int number)
 	{
-		final int number = Model.get_local_occurrence(lat, lon);
 		return (float)number / (float)Model.get_max_occurrence();
 	}
 
@@ -206,15 +203,23 @@ public class Earth
 		parent.getChildren().addAll(mesh_view);
 	}
 
-	public static void test(Group parent, float lat, float lon)
+	public static void test(Group parent, float lat, float lon, int year)
 	{
-		PhongMaterial material = get_color(lat, lon);
+		final int number;
+
+		if (year == -1)
+			number = Model.get_local_occurrence(lat, lon);
+
+		else
+			number = Model.get_evolution_occurrence(lat, lon, year);
+
+		PhongMaterial material = get_color(lat, lon, number);
 
 		if (material == null)
 			return;
 
 		Point3D from = geo_coord_to_3d_coord(lat, lon, 1.0f);
-		Box box = new Box(0.01f, 0.01f, get_size(lat, lon));
+		Box box = new Box(0.01f, 0.01f, get_size(lat, lon, number));
 		box.setMaterial(material);
 
 		Point3D to = Point3D.ZERO;
@@ -241,11 +246,11 @@ public class Earth
 		camera_manager.force_update();
 	}
 
-	private static void show_data_squares(Group parent)
+	private static void show_data_squares(Group parent, int year)
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
 			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
-				test(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2);
+				test(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2, year);
 	}
 
 	public static void handle_events(Stage stage)

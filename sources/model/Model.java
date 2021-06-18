@@ -20,12 +20,14 @@ public class Model
 
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
-		for(int i = 0; i < 70; i++)
+
+		evolution_collection = new ArrayList<FeatureCollection>();
+
+		for (int i = 0; i < 120; i++)
 		{
-			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1950 + i) +
-					"&enddate=" + (1950 + i + 1);
-			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
-					"Delphinidae")));
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1900 + i) + "-01-01" +
+					"&enddate=" + (1900 + i + 1) + "-01-01";
+			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), "Delphinidae")));
 		}
 	}
 
@@ -77,11 +79,11 @@ public class Model
 		return res;
 	}
 
-	public static int get_evolution_occurrence(double lat, double lon, double year)
+	public static int get_evolution_occurrence(double lat, double lon, int year)
 	{
 		int res = 0;
 
-		for (Feature f : evolution_collection.get((int)year - 1950).get_features())
+		for (Feature f : evolution_collection.get(year - 1900).get_features())
 		{
 			Point2D point_min = f.get_zone().get_coords()[0];
 			Point2D point_max = f.get_zone().get_coords()[2];
@@ -111,8 +113,7 @@ public class Model
 
 	// Occurrences d'une espèce de l'api à certaines coordonnées et pendant un intervalle de temps
 	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
-	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
-									 String end_date)
+	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date, String end_date)
 	{
 		int res = 0;
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
