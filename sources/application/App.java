@@ -64,7 +64,7 @@ public class App implements Initializable
 		Legend.min = min;
 		Legend.max = max;
 
-		Earth.init(pane3D, anchor_pane);
+		Earth.init(pane3D, anchor_pane, hbox);
 
 		Menu.combobox = combobox;
 		Menu.start_date_picker = start_date_picker;

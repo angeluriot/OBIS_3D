@@ -191,9 +191,9 @@ public class Model
 		String url = "https://api.obis.org/v3/occurrence?";
 
 		if (species_feature_collection.get_name().length() > 0)
-			url += ("scientificname=" + species_feature_collection.get_name() + "&amp;");
+			url += ("scientificname=" + species_feature_collection.get_name());
 
-		url += ("geometry=" + geohash);
+		url += ("&geometry=" + geohash);
 
 		return Read.parseObservationJson(Read.readJsonFromUrl(url));
 	}

@@ -3,12 +3,14 @@ package scene3d;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import features.FeatureCollection;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
 import javafx.scene.layout.AnchorPane;
@@ -34,7 +36,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Earth
 {
-	private static final float TEXTURE_OFFSET = 1.01f;
 	private static final float ZONE_SIZE = 360.f / 256.f;
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
@@ -44,9 +45,13 @@ public class Earth
 	private static Pane pane;
 	private static Group squares;
 	private static AnchorPane anchor_pane;
+	private static ListView list_view;
+	private static HBox hbox;
+	private static boolean first_click = true;
 
-	public static void init(Pane pane3D, AnchorPane anchor_pane3D)
+	public static void init(Pane pane3D, AnchorPane anchor_pane3D, HBox true_root)
 	{
+		hbox = true_root;
 		anchor_pane = anchor_pane3D;
 		pane = pane3D;
 		Group root = new Group();
@@ -110,22 +115,45 @@ public class Earth
 	{
 		earth.addEventHandler(MouseEvent.ANY, event ->
 		{
-			if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown())
+			if (event.getEventType() == MouseEvent.MOUSE_PRESSED && (event.isAltDown() || event.getButton() == MouseButton.SECONDARY))
 			{
+				first_click = true;
+				anchor_pane.getChildren().remove(list_view);
+
 				PickResult pick_result = event.getPickResult();
 				Point3D space_coord = pick_result.getIntersectedPoint();
 
 				Point2D position = coord_3d_to_geo_coord(space_coord);
-				displayTown(squares, "?", (float)position.getX(), (float)position.getY());
-				/*
+
 				ArrayList<Observation> observations = Model.get_observation(Model.gps_to_geohash((float)position.getX(), (float)position.getY(), 3));
 				ObservableList<String> list = FXCollections.observableArrayList();
 
-				for (Observation observation : observations)
-					list.add(observation.get_recorded_by());
+				if (observations.size() > 0)
+				{
+					for (Observation observation : observations)
+						list.add(observation.get_scientific_name());
 
-				ListView list_view = new ListView(list);
-				*/
+					list_view = new ListView(list);
+					list_view.setFixedCellSize(30);
+					list_view.setStyle("-fx-font-size : 11pt");
+					list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
+					list_view.setPrefWidth(300);
+					list_view.setTranslateX(event.getSceneX());
+					list_view.setTranslateY(event.getSceneY());
+					anchor_pane.getChildren().add(list_view);
+				}
+			}
+		});
+
+		hbox.addEventHandler(MouseEvent.ANY, event ->
+		{
+			if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
+			{
+				if (!first_click)
+					anchor_pane.getChildren().remove(list_view);
+
+				else
+					first_click = false;
 			}
 		});
 	}
@@ -153,20 +181,8 @@ public class Earth
 
 	public static Point2D coord_3d_to_geo_coord(Point3D point)
 	{
-		/*
-		float lat = (float)(Math.asin(-point.getY() / TEXTURE_OFFSET) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
-		float lon;
+		double latitude = (float)(Math.asin(-point.getY()) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
 
-		if (point.getZ() < 0)
-			lon = 180 - (float)(Math.asin(-point.getX() / (TEXTURE_OFFSET * Math.cos((Math.PI / 180) * (lat + TEXTURE_LAT_OFFSET)))) * 180 / Math.PI + TEXTURE_LON_OFFSET);
-
-		else
-			lon = (float)(Math.asin(-point.getX() / (TEXTURE_OFFSET * Math.cos((Math.PI / 180) * (lat + TEXTURE_LAT_OFFSET)))) * 180 / Math.PI - TEXTURE_LON_OFFSET);
-
-		return new Point2D(lat, lon);
-		*/
-
-		double latitude = -Math.asin(point.getY() / 1.1) * 180 / Math.PI - TEXTURE_LAT_OFFSET;
 		double longitude = -(Math.atan2(-point.getZ(), -point.getX())) - Math.PI / 2;
 
 		if (longitude < -Math.PI)
