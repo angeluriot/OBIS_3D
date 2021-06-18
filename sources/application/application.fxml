@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="hbox" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16" fx:controller="application.App">
+<HBox fx:id="hbox" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.App">
    <children>
       <Pane fx:id="pane3D" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="600.0" />
       <VBox fx:id="menu" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0">
@@ -25,7 +25,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <ComboBox editable="true" prefWidth="300.0" style="-fx-font-size: 15;" />
+            <ComboBox fx:id="combobox" editable="true" prefWidth="300.0" style="-fx-font-size: 15;" />
             <Separator prefHeight="50.0" />
             <Label text="Durée :" textAlignment="CENTER">
                <font>

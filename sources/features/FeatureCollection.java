@@ -4,17 +4,44 @@ public class FeatureCollection
 {
 	private String name;
 	private Feature[] features;
+	private int max_occurrence;
 
 	public FeatureCollection(String name, Feature[] features)
 	{
 		this.name = name;
 		this.features = features;
+
+		int max = 0;
+
+		for (Feature feature : features)
+		{
+			int number = feature.get_number();
+
+			if (number > max)
+				max = number;
+
+		}
+
+		max_occurrence = max;
 	}
 
 	public FeatureCollection(FeatureCollection other)
 	{
 		name = other.get_name();
 		features = other.get_features();
+
+		int max = 0;
+
+		for (Feature feature : features)
+		{
+			int number = feature.get_number();
+
+			if (number > max)
+				max = number;
+
+		}
+
+		max_occurrence = max;
 	}
 	
 	public final String get_name()
@@ -26,4 +53,6 @@ public class FeatureCollection
 	{
 		return features;
 	}
+
+	public final int get_max_occurrence() { return max_occurrence; }
 }

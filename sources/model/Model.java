@@ -13,7 +13,7 @@ public class Model
 {
 	private static FeatureCollection species_feature_collection;
 	
-	public Model()
+	public static void init_collection()
 	{
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
@@ -24,6 +24,29 @@ public class Model
 		return species_feature_collection;
 	}
 
+	public static void set_collection(String specie)
+	{
+		String specie_space = "";
+		for(char c : specie.toCharArray())
+		{
+			if(c == ' ')
+				specie_space += "%20";
+			else
+				specie_space += c;
+		}
+		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space;
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie));
+	}
+
+	public static void set_collection(String start_date, String end_date)
+	{
+		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + species_feature_collection.get_name()
+				+ "&startdate=" + start_date + "&enddate=" + end_date;
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
+				species_feature_collection.get_name()));
+	}
+
+	// Occurrences de l'espèce chargée
 	public static int get_local_occurrence(double lat, double lon)
 	{
 		int res = 0;
@@ -39,7 +62,8 @@ public class Model
 
 		return res;
 	}
-	
+
+	// Occurrences d'une espèce de l'api à certaines coordonnées
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie)
 	{
 		int res = 0;
@@ -54,6 +78,8 @@ public class Model
 		return res;
 	}
 
+
+	// Occurrences d'une espèce de l'api à certaines coordonnées et pendant un intervalle de temps
 	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
 							  String end_date)
@@ -71,10 +97,11 @@ public class Model
 		return res;
 	}
 
-	public static ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
-							  String interval, int interval_nb)
+	// Occurrences d'une espèce de l'api à certaines coordonnées et pour plusieurs intervalles de temps
+	public static ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie,
+													String start_date, String interval, int interval_nb)
 	{
-		ArrayList<Integer> res = new ArrayList<Integer>();
+		ArrayList<Integer> res = new ArrayList<>();
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
 		String url;
 		Time start_time = new Time(start_date);
@@ -100,67 +127,25 @@ public class Model
 		return res;
 	}
 
-	public static ArrayList<Observation> get_observation(String geohash, String scientific_name)
+	public static ArrayList<Observation> get_observation(String geohash)
 	{
 		String url = "https://api.obis.org/v3/occurrence?";
-		if(scientific_name.length() > 0)
-			url += ("scientificname=" + scientific_name + "&amp;");
+		if(species_feature_collection.get_name().length() > 0)
+			url += ("scientificname=" + species_feature_collection.get_name() + "&amp;");
 		url += ("geometry=" + geohash);
 
 		return Read.parseObservationJson(Read.readJsonFromUrl(url));
 	}
 
-	/*
-	public final ArrayList<String> get_species(String begin)
+	public static ArrayList<String> get_species(String begin)
 	{
-		ArrayList<String> species_list = new ArrayList<>();
-		
-		for (FeatureCollection collection : species_feature_collection)
-		{
-			char[] name = collection.get_name().toCharArray();
-			String begin_name = "";
-			
-			for (int i = 0; i < begin.length() && i < name.length; i++)
-				begin_name += name[i];
-			
-			if (begin_name.equals(begin))
-				species_list.add(collection.get_name());
-		}
-		
-		return species_list;
+		String url = "https://api.obis.org/v3/taxon/complete/verbose/" + begin;
+		return Read.parseVerboseJson(Read.readJsonArrayFromUrl(url));
 	}
 
-	 */
-
-	public static final int get_min_occurrence()
+	public static int get_max_occurrence()
 	{
-		int min = Integer.MAX_VALUE;
-
-		for (Feature feature : species_feature_collection.get_features())
-		{
-			int number = feature.get_number();
-
-			if (number < min)
-				min = number;
-		}
-
-		return min;
-	}
-
-	public static final int get_max_occurrence()
-	{
-		int max = 0;
-
-		for (Feature feature : species_feature_collection.get_features())
-		{
-			int number = feature.get_number();
-
-			if (number > max)
-				max = number;
-
-		}
-
-		return max;
+		return species_feature_collection.get_max_occurrence();
 	}
 	
 	public static String gps_to_geohash(float lat, float lon, float precision)

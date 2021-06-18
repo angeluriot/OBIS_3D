@@ -62,6 +62,36 @@ public class Read
 		return new JSONObject(json);
 	}
 
+	public static JSONArray readJsonArrayFromUrl(String url)
+	{
+		String json = "";
+
+		HttpClient client = HttpClient.newBuilder()
+				.version(HttpClient.Version.HTTP_1_1)
+				.followRedirects(HttpClient.Redirect.NORMAL)
+				.connectTimeout(Duration.ofSeconds(20))
+				.build();
+
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url))
+				.timeout(Duration.ofMinutes(2))
+				.header("Content-type", "application/json")
+				.GET()
+				.build();
+
+		try
+		{
+			json = client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+					.thenApply(HttpResponse::body).get(10, TimeUnit.SECONDS);
+		}
+
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return new JSONArray(json);
+	}
 
 	public static String readLocalFile(String file) {
 		try (Reader reader = new java.io.FileReader(file)) {
@@ -192,5 +222,17 @@ public class Read
 		}
 
 		return observations;
+	}
+
+	public static ArrayList<String> parseVerboseJson(JSONArray json_array)
+	{
+		ArrayList<String> scientific_names = new ArrayList<>();
+		for(int i = 0; i < json_array.length(); i++)
+		{
+			JSONObject specie = json_array.getJSONObject(i);
+			scientific_names.add(specie.getString("scientificName"));
+		}
+
+		return scientific_names;
 	}
 }
