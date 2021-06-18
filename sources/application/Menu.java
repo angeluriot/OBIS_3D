@@ -34,10 +34,10 @@ public class Menu
 	public static Button play;
 	public static Button pause;
 	public static Button stop;
-	public static int start;
+	private static int start;
 	public static boolean playing = false;
-	public static boolean http_mode = false;
-	public static boolean is_evolution_loaded = false;
+	private static boolean http_mode = false;
+	private static boolean is_evolution_loaded = false;
 
 	public static void init()
 	{

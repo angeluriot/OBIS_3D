@@ -14,8 +14,8 @@ public class Model
 	private static FeatureCollection species_feature_collection;
 	private static ArrayList<FeatureCollection> evolution_collection;
 
-	private static String start_date;
-	private static String end_date;
+	private static String start_date = "";
+	private static String end_date = "";
 
 	public static void init_collection()
 	{
@@ -198,7 +198,7 @@ public class Model
 		if (species_feature_collection.get_name().length() > 0)
 			url += ("scientificname=" + species_feature_collection.get_name());
 
-		if(!start_date.isEmpty() && !end_date.isEmpty())
+		if (!start_date.equals("") && !end_date.equals(""))
 			url += ("&startdate=" + start_date + "&enddate=" + end_date);
 
 		url += ("&geometry=" + geohash);

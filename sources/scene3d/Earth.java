@@ -1,5 +1,6 @@
 package scene3d;
 
+import application.Menu;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import features.FeatureCollection;
@@ -115,7 +116,7 @@ public class Earth
 	{
 		earth.addEventHandler(MouseEvent.ANY, event ->
 		{
-			if (event.getEventType() == MouseEvent.MOUSE_PRESSED && (event.isAltDown() || event.getButton() == MouseButton.SECONDARY))
+			if (event.getEventType() == MouseEvent.MOUSE_PRESSED && (event.isAltDown() || event.getButton() == MouseButton.SECONDARY) && !Menu.playing)
 			{
 				first_click = true;
 				anchor_pane.getChildren().remove(list_view);
