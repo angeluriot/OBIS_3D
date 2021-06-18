@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import model.Model;
@@ -60,10 +61,14 @@ public class Main extends Application
 
 		ArrayList<Observation> test5 = Model.get_observation("spd");
 		System.out.println(test5.get(0));
+<<<<<<< HEAD
 
 		ArrayList<String> test6 = Model.get_species("ac");
 		System.out.println(test6.get(0));
 		*/
+=======
+		
+>>>>>>> app3D
 		launch(args);
 	}
 }
