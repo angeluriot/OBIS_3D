@@ -183,6 +183,21 @@ public class Read
 		return new FeatureCollection(name, feature_array);
 	}
 
+	public static ArrayList<String> parseNamesJson(JSONObject json)
+	{
+		ArrayList<String> names = new ArrayList<>();
+		JSONArray results = json.getJSONArray("results");
+
+		for (int i = 0; i < results.length(); i++)
+		{
+			JSONObject result = results.getJSONObject(i);
+			String scientific_name = result.getString("scientificName");
+			names.add(scientific_name);
+		}
+
+		return names;
+	}
+
 	public static ArrayList<Observation> parseObservationJson(JSONObject json)
 	{
 		ArrayList<Observation> observations = new ArrayList<>();

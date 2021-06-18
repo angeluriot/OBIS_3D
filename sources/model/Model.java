@@ -191,6 +191,18 @@ public class Model
 		return res;
 	}
 
+	public static ArrayList<String> get_species_from_geohash(String geohash)
+	{
+		String url = "https://api.obis.org/v3/occurrence?";
+
+		if (!start_date.equals("") && !end_date.equals(""))
+			url += ("&startdate=" + start_date + "&enddate=" + end_date);
+
+		url += ("&geometry=" + geohash);
+
+		return Read.parseNamesJson(Read.readJsonFromUrl(url));
+	}
+
 	public static ArrayList<Observation> get_observation(String geohash)
 	{
 		String url = "https://api.obis.org/v3/occurrence?";
