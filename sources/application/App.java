@@ -3,6 +3,7 @@ package application;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import model.Model;
@@ -48,6 +49,9 @@ public class App implements Initializable
 	private Label min;
 
 	@FXML
+	private AnchorPane anchor_pane;
+
+	@FXML
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		slider.setShowTickLabels(true);
@@ -60,7 +64,7 @@ public class App implements Initializable
 		Legend.min = min;
 		Legend.max = max;
 
-		Earth.init(pane3D);
+		Earth.init(pane3D, anchor_pane);
 
 		Menu.combobox = combobox;
 		Menu.start_date_picker = start_date_picker;

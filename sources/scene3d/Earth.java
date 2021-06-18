@@ -3,11 +3,15 @@ package scene3d;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import features.FeatureCollection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -19,9 +23,13 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import model.Model;
+import utils.Observation;
 
+import javax.tools.DocumentationTool;
+import javax.tools.JavaFileManager;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Earth
@@ -35,9 +43,11 @@ public class Earth
 	private static Group earth;
 	private static Pane pane;
 	private static Group squares;
+	private static AnchorPane anchor_pane;
 
-	public static void init(Pane pane3D)
+	public static void init(Pane pane3D, AnchorPane anchor_pane3D)
 	{
+		anchor_pane = anchor_pane3D;
 		pane = pane3D;
 		Group root = new Group();
 
@@ -106,10 +116,16 @@ public class Earth
 				Point3D space_coord = pick_result.getIntersectedPoint();
 
 				Point2D position = coord_3d_to_geo_coord(space_coord);
-				System.out.println(position.getX());
-				System.out.println(position.getY());
-				System.out.println(Model.get_local_occurrence((float)position.getX(), (float)position.getY()));
 				displayTown(squares, "?", (float)position.getX(), (float)position.getY());
+				/*
+				ArrayList<Observation> observations = Model.get_observation(Model.gps_to_geohash((float)position.getX(), (float)position.getY(), 3));
+				ObservableList<String> list = FXCollections.observableArrayList();
+
+				for (Observation observation : observations)
+					list.add(observation.get_recorded_by());
+
+				ListView list_view = new ListView(list);
+				*/
 			}
 		});
 	}
@@ -137,6 +153,7 @@ public class Earth
 
 	public static Point2D coord_3d_to_geo_coord(Point3D point)
 	{
+		/*
 		float lat = (float)(Math.asin(-point.getY() / TEXTURE_OFFSET) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
 		float lon;
 
@@ -147,6 +164,18 @@ public class Earth
 			lon = (float)(Math.asin(-point.getX() / (TEXTURE_OFFSET * Math.cos((Math.PI / 180) * (lat + TEXTURE_LAT_OFFSET)))) * 180 / Math.PI - TEXTURE_LON_OFFSET);
 
 		return new Point2D(lat, lon);
+		*/
+
+		double latitude = -Math.asin(point.getY() / 1.1) * 180 / Math.PI - TEXTURE_LAT_OFFSET;
+		double longitude = -(Math.atan2(-point.getZ(), -point.getX())) - Math.PI / 2;
+
+		if (longitude < -Math.PI)
+			longitude += Math.PI * 2;
+
+		longitude *= -180 / Math.PI;
+		longitude -= TEXTURE_LON_OFFSET;
+
+		return new Point2D(latitude, longitude);
 	}
 
 	private static PhongMaterial get_color(float lat, float lon, int number)
