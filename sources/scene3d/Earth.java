@@ -3,8 +3,11 @@ package scene3d;
 import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import features.FeatureCollection;
+import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.PickResult;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -23,11 +26,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Earth
 {
+	private static final float TEXTURE_OFFSET = 1.01f;
 	private static final float ZONE_SIZE = 360.f / 256.f;
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
 	private static CameraManager camera_manager;
 	private static SubScene sub_scene;
+	private static Group earth;
 	private static Pane pane;
 	private static Group squares;
 
@@ -52,16 +57,15 @@ public class Earth
 		}
 
 		MeshView[] meshViews = obj_importer.getImport();
-		Group earth = new Group(meshViews);
+		earth = new Group(meshViews);
 		root.getChildren().add(earth);
 
 		squares = new Group();
+		squares.setDisable(true);
+		squares.setFocusTraversable(true);
 		earth.getChildren().add(squares);
 
 		meshViews[0].setTranslateX(-1);
-		meshViews[0].setScaleX(0.999);
-		meshViews[0].setScaleY(0.999);
-		meshViews[0].setScaleZ(0.999);
 
 		// Add a camera group
 		PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -89,6 +93,25 @@ public class Earth
 
 		// Initial update
 		update();
+		handle_click();
+	}
+
+	public static void handle_click()
+	{
+		earth.addEventHandler(MouseEvent.ANY, event ->
+		{
+			if (event.getEventType() == MouseEvent.MOUSE_PRESSED && event.isAltDown())
+			{
+				PickResult pick_result = event.getPickResult();
+				Point3D space_coord = pick_result.getIntersectedPoint();
+
+				Point2D position = coord_3d_to_geo_coord(space_coord);
+				System.out.println(position.getX());
+				System.out.println(position.getY());
+				System.out.println(Model.get_local_occurrence((float)position.getX(), (float)position.getY()));
+				displayTown(squares, "?", (float)position.getX(), (float)position.getY());
+			}
+		});
 	}
 
 	public static void update()
@@ -110,6 +133,20 @@ public class Earth
 			-java.lang.Math.sin(java.lang.Math.toRadians(lon_cor)) * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)),
 			-java.lang.Math.sin(java.lang.Math.toRadians(lat_cor)),
 			java.lang.Math.cos(java.lang.Math.toRadians(lon_cor)) * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
+	}
+
+	public static Point2D coord_3d_to_geo_coord(Point3D point)
+	{
+		float lat = (float)(Math.asin(-point.getY() / TEXTURE_OFFSET) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
+		float lon;
+
+		if (point.getZ() < 0)
+			lon = 180 - (float)(Math.asin(-point.getX() / (TEXTURE_OFFSET * Math.cos((Math.PI / 180) * (lat + TEXTURE_LAT_OFFSET)))) * 180 / Math.PI + TEXTURE_LON_OFFSET);
+
+		else
+			lon = (float)(Math.asin(-point.getX() / (TEXTURE_OFFSET * Math.cos((Math.PI / 180) * (lat + TEXTURE_LAT_OFFSET)))) * 180 / Math.PI - TEXTURE_LON_OFFSET);
+
+		return new Point2D(lat, lon);
 	}
 
 	private static PhongMaterial get_color(float lat, float lon)
@@ -169,13 +206,15 @@ public class Earth
 		parent.getChildren().addAll(mesh_view);
 	}
 
-	public static void test(Group parent, float lat, float lon, PhongMaterial material, float size)
+	public static void test(Group parent, float lat, float lon)
 	{
+		PhongMaterial material = get_color(lat, lon);
+
 		if (material == null)
 			return;
 
 		Point3D from = geo_coord_to_3d_coord(lat, lon, 1.0f);
-		Box box = new Box(0.01f, 0.01f, size);
+		Box box = new Box(0.01f, 0.01f, get_size(lat, lon));
 		box.setMaterial(material);
 
 		Point3D to = Point3D.ZERO;
@@ -191,12 +230,22 @@ public class Earth
 		parent.getChildren().addAll(group);
 	}
 
+	public static void displayTown(Group parent, String name, float lat, float lon)
+	{
+		Sphere sphere = new Sphere(0.01);
+		Point3D coords3D = geo_coord_to_3d_coord(lat, lon, 0.f);
+		sphere.setTranslateX(coords3D.getX() - 1);
+		sphere.setTranslateY(coords3D.getY());
+		sphere.setTranslateZ(coords3D.getZ());
+		parent.getChildren().add(sphere);
+		camera_manager.force_update();
+	}
+
 	private static void show_data_squares(Group parent)
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
 			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
-				test(parent, lat, lon, get_color(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2),
-					get_size(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2));
+				test(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2);
 	}
 
 	public static void handle_events(Stage stage)

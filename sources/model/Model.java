@@ -60,7 +60,7 @@ public class Model
 			Point2D point_min = f.get_zone().get_coords()[0];
 			Point2D point_max = f.get_zone().get_coords()[2];
 
-			if (lat > point_min.getX() && lat < point_max.getX() && lon > point_min.getY() && lon < point_max.getY())
+			if (lat >= point_min.getX() && lat <= point_max.getX() && lon >= point_min.getY() && lon <= point_max.getY())
 				res += f.get_number();
 		}
 
