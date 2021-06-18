@@ -2,7 +2,7 @@
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-Java-ff9214)
-![size](https://img.shields.io/badge/Size-4Ko-f12222)
+![size](https://img.shields.io/badge/Size-17Mo-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
 
 <br/>
@@ -12,7 +12,7 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 <br/>
 
 <p align="center">
-	<img src="https://i.imgur.com/DzpWJEt.png" width="700">
+	<img src="https://i.imgur.com/Any94qm.png" width="700">
 </p>
 
 <br/>
