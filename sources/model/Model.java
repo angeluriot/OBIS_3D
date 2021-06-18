@@ -14,6 +14,9 @@ public class Model
 	private static FeatureCollection species_feature_collection;
 	private static ArrayList<FeatureCollection> evolution_collection;
 
+	private static String start_date;
+	private static String end_date;
+
 	public static void init_collection()
 	{
 		String url;
@@ -59,6 +62,8 @@ public class Model
 
 	public static void set_date(String start_date, String end_date)
 	{
+		Model.start_date = start_date;
+		Model.end_date = end_date;
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + species_feature_collection.get_name()
 				+ "&startdate=" + start_date + "&enddate=" + end_date;
 
@@ -191,9 +196,12 @@ public class Model
 		String url = "https://api.obis.org/v3/occurrence?";
 
 		if (species_feature_collection.get_name().length() > 0)
-			url += ("scientificname=" + species_feature_collection.get_name() + "&amp;");
+			url += ("scientificname=" + species_feature_collection.get_name());
 
-		url += ("geometry=" + geohash);
+		if(!start_date.isEmpty() && !end_date.isEmpty())
+			url += ("&startdate=" + start_date + "&enddate=" + end_date);
+
+		url += ("&geometry=" + geohash);
 
 		return Read.parseObservationJson(Read.readJsonFromUrl(url));
 	}

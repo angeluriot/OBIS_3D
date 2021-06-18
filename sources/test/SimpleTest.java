@@ -80,11 +80,11 @@ public class SimpleTest
 		Model.set_collection("Selachii");
 		Observation test = Model.get_observation("spd").get(0);
 
-		assertEquals("Etmopterus baxteri", test.get_scientific_name());
+		assertEquals("Oxynotus centrina", test.get_scientific_name());
 		assertEquals("Squaliformes", test.get_order());
 		assertEquals("Pisces", test.get_super_class());
-		assertEquals("", test.get_recorded_by());
-		assertEquals("Etmopterus baxteri", test.get_specie());
+		assertEquals("bauchot", test.get_recorded_by());
+		assertEquals("Oxynotus centrina", test.get_specie());
 	}
 
 	@Test
