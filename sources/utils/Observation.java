@@ -16,27 +16,27 @@ public class Observation
 		this.recorded_by = recorded_by;
 		this.specie = specie;
 	}
-	
+
 	public final String get_scientific_name()
 	{
 		return scientific_name;
 	}
-	
+
 	public final String get_order()
 	{
 		return order;
 	}
-	
+
 	public final String get_super_class()
 	{
 		return super_class;
 	}
-	
+
 	public final String get_recorded_by()
 	{
 		return recorded_by;
 	}
-	
+
 	public final String get_specie()
 	{
 		return specie;

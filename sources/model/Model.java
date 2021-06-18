@@ -12,14 +12,14 @@ import java.util.ArrayList;
 public class Model
 {
 	private static FeatureCollection species_feature_collection;
-	
+
 	public static void init_collection()
 	{
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
 	}
-	
-	public static final FeatureCollection get_feature_collection(String specie)
+
+	public static FeatureCollection get_feature_collection(String specie)
 	{
 		return species_feature_collection;
 	}
@@ -27,13 +27,16 @@ public class Model
 	public static void set_collection(String specie)
 	{
 		String specie_space = "";
-		for(char c : specie.toCharArray())
+
+		for (char c : specie.toCharArray())
 		{
-			if(c == ' ')
+			if (c == ' ')
 				specie_space += "%20";
+
 			else
 				specie_space += c;
 		}
+
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space;
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie));
 	}
@@ -42,6 +45,7 @@ public class Model
 	{
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + species_feature_collection.get_name()
 				+ "&startdate=" + start_date + "&enddate=" + end_date;
+
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
 				species_feature_collection.get_name()));
 	}
@@ -51,12 +55,12 @@ public class Model
 	{
 		int res = 0;
 
-		for(Feature f : species_feature_collection.get_features())
+		for (Feature f : species_feature_collection.get_features())
 		{
 			Point2D point_min = f.get_zone().get_coords()[0];
 			Point2D point_max = f.get_zone().get_coords()[2];
-			if(lat > point_min.getX() && lat < point_max.getX()
-			&& lon > point_min.getY() && lon < point_max.getY())
+
+			if (lat > point_min.getX() && lat < point_max.getX() && lon > point_min.getY() && lon < point_max.getY())
 				res += f.get_number();
 		}
 
@@ -72,7 +76,7 @@ public class Model
 
 		FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
 
-		for(Feature f : collection.get_features())
+		for (Feature f : collection.get_features())
 			res += f.get_number();
 
 		return res;
@@ -81,17 +85,16 @@ public class Model
 
 	// Occurrences d'une espèce de l'api à certaines coordonnées et pendant un intervalle de temps
 	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
-	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
-							  String end_date)
+	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date, String end_date)
 	{
 		int res = 0;
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
-		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&startdate=" + start_date
-				+ "&enddate=" + end_date + "&geometry=" + geohash;
+		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie + "&startdate=" + start_date +
+				"&enddate=" + end_date + "&geometry=" + geohash;
 
 		FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
 
-		for(Feature f : collection.get_features())
+		for (Feature f : collection.get_features())
 			res += f.get_number();
 
 		return res;
@@ -99,7 +102,7 @@ public class Model
 
 	// Occurrences d'une espèce de l'api à certaines coordonnées et pour plusieurs intervalles de temps
 	public static ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie,
-													String start_date, String interval, int interval_nb)
+		String start_date, String interval, int interval_nb)
 	{
 		ArrayList<Integer> res = new ArrayList<>();
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
@@ -109,7 +112,7 @@ public class Model
 		Time end_time = new Time(start_time);
 		end_time.add_interval(interval_time);
 
-		for(int i = 0; i < interval_nb; i++)
+		for (int i = 0; i < interval_nb; i++)
 		{
 			res.add(0);
 			int compt = 0;
@@ -117,8 +120,9 @@ public class Model
 					start_time.get_date() + "&enddate=" + end_time.get_date()+ "&geometry=" + geohash;
 			FeatureCollection collection = Read.parseCollectionJson(Read.readJsonFromUrl(url), specie);
 
-			for(Feature f : collection.get_features())
+			for (Feature f : collection.get_features())
 				compt += f.get_number();
+
 			res.set(i, compt);
 			start_time.add_interval(interval_time);
 			end_time.add_interval(interval_time);
@@ -130,8 +134,10 @@ public class Model
 	public static ArrayList<Observation> get_observation(String geohash)
 	{
 		String url = "https://api.obis.org/v3/occurrence?";
-		if(species_feature_collection.get_name().length() > 0)
+
+		if (species_feature_collection.get_name().length() > 0)
 			url += ("scientificname=" + species_feature_collection.get_name() + "&amp;");
+
 		url += ("geometry=" + geohash);
 
 		return Read.parseObservationJson(Read.readJsonFromUrl(url));
@@ -147,7 +153,7 @@ public class Model
 	{
 		return species_feature_collection.get_max_occurrence();
 	}
-	
+
 	public static String gps_to_geohash(float lat, float lon, float precision)
 	{
 		String base32 = "0123456789bcdefghjkmnpqrstuvwxyz";
@@ -155,51 +161,51 @@ public class Model
 		int bit = 0;
 		boolean even_bit = true;
 		String geohash = "";
-		
+
 		float lat_min =  -90;
 		float lat_max =   90;
 		float lon_min = -180;
 		float lon_max =  180;
-		
+
 		while (geohash.length() < precision)
 		{
 			if (even_bit)
 			{
 				float lonMid = (lon_min + lon_max) / 2;
-				
+
 				if (lon > lonMid)
 				{
-					idx = idx*2 + 1;
+					idx = idx * 2 + 1;
 					lon_min = lonMid;
 				}
-				
+
 				else
 				{
-					idx = idx*2;
+					idx = idx * 2;
 					lon_max = lonMid;
 				}
-				
+
 			}
-			
+
 			else
 			{
 				float latMid = (lat_min + lat_max) / 2;
-				
+
 				if (lat > latMid)
 				{
-					idx = idx*2 + 1;
+					idx = idx * 2 + 1;
 					lat_min = latMid;
 				}
-				
+
 				else
 				{
-					idx = idx*2;
+					idx = idx * 2;
 					lat_max = latMid;
 				}
 			}
-			
+
 			even_bit = !even_bit;
-			
+
 			if (++bit == 5)
 			{
 				geohash += base32.charAt(idx);
@@ -207,7 +213,7 @@ public class Model
 				idx = 0;
 			}
 		}
-		
+
 		return geohash;
 	}
 }

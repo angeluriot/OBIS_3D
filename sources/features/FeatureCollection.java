@@ -11,18 +11,15 @@ public class FeatureCollection
 		this.name = name;
 		this.features = features;
 
-		int max = 0;
+		max_occurrence = 0;
 
 		for (Feature feature : features)
 		{
 			int number = feature.get_number();
 
-			if (number > max)
-				max = number;
-
+			if (number > max_occurrence)
+				max_occurrence = number;
 		}
-
-		max_occurrence = max;
 	}
 
 	public FeatureCollection(FeatureCollection other)
@@ -38,21 +35,23 @@ public class FeatureCollection
 
 			if (number > max)
 				max = number;
-
 		}
 
 		max_occurrence = max;
 	}
-	
+
 	public final String get_name()
 	{
 		return name;
 	}
-	
+
 	public final Feature[] get_features()
 	{
 		return features;
 	}
 
-	public final int get_max_occurrence() { return max_occurrence; }
+	public final int get_max_occurrence()
+	{
+		return max_occurrence;
+	}
 }

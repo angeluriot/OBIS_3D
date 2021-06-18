@@ -20,17 +20,17 @@ public class Main extends Application
 	public void start(Stage stage) throws Exception
 	{
 		Parent root = FXMLLoader.load(getClass().getResource("application.fxml"));
-		
+
 		Earth.handle_events(stage);
-		
+
 		stage.setTitle("OBIS 3D");
 		stage.setScene(new Scene(root, 1200, 700));
-		stage.setMinWidth(400);
+		stage.setMinWidth(500);
 		stage.setMinHeight(400);
 		Menu.selection(stage.getScene());
 		stage.show();
 	}
-	
+
 	public static void main(String[] args)
 	{
 		Model.init_collection();
@@ -65,7 +65,7 @@ public class Main extends Application
 		ArrayList<String> test6 = Model.get_species("ac");
 		System.out.println(test6.get(0));
 		*/
-		
+
 		launch(args);
 	}
 }

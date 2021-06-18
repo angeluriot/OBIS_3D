@@ -5,9 +5,9 @@ import javafx.scene.control.Label;
 public class Legend
 {
 	public static Label max;
-	
-	public static void update_max(int value)
+
+	public static void update(int new_max)
 	{
-		max.setText(Integer.toString(value));
+		max.setText(Integer.toString(new_max));
 	}
 }

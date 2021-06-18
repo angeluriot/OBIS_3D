@@ -30,7 +30,7 @@ public class App implements Initializable
 
 	@FXML
 	private Slider slider;
-	
+
 	@FXML
 	private Pane pane3D;
 
@@ -38,11 +38,8 @@ public class App implements Initializable
 	private HBox hbox;
 
 	@FXML
-	private ImageView legend_image;
-	
-	@FXML
 	private Label max;
-	
+
 	@FXML
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -50,14 +47,11 @@ public class App implements Initializable
 		slider.setShowTickMarks(true);
 		slider.setMajorTickUnit(20);
 		slider.setMinorTickCount(1);
-		
-		pane3D.setPrefWidth(600);
-		pane3D.setPrefHeight(600);
 
 		Menu.combobox = combobox;
 		Menu.slider = slider;
 
-		Earth.init(pane3D);
 		Legend.max = max;
+		Earth.init(pane3D);
 	}
 }

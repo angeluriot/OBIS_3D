@@ -42,12 +42,12 @@
                   </HBox>
                   <HBox>
                      <children>
-                        <Label prefWidth="60.0" text="0" textFill="WHITE">
+                        <Label fx:id="min" prefWidth="60.0" text="1" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="60.0" text="10" textAlignment="RIGHT" textFill="WHITE">
+                        <Label fx:id="max" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="60.0" text="10" textAlignment="RIGHT" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
                            </font>
