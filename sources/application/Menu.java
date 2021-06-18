@@ -136,6 +136,7 @@ public class Menu
 				start = (int)slider.getValue();
 
 			slider.setDisable(true);
+			slider.setOpacity(1);
 			timeline.setCycleCount((2020 - (int)slider.getValue()) / 5 + 1);
 			timeline.play();
 		});
