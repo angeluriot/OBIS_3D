@@ -36,6 +36,8 @@ public class Menu
 	public static Button stop;
 	public static int start;
 	public static boolean playing = false;
+	public static boolean http_mode = false;
+	public static boolean is_evolution_loaded = false;
 
 	public static void init()
 	{
@@ -52,6 +54,8 @@ public class Menu
 			{
 				if (combobox.getValue() != null)
 				{
+					http_mode = true;
+					is_evolution_loaded = false;
 					Model.set_collection(combobox.getValue().toString());
 					start_date_picker.setValue(null);
 					end_date_picker.setValue(null);
@@ -63,6 +67,7 @@ public class Menu
 			{
 				if (combobox.getValue().toString().equals(""))
 				{
+					http_mode = false;
 					Model.init_collection();
 					Earth.update(-1);
 				}
@@ -99,14 +104,13 @@ public class Menu
 
 	public static void evolution()
 	{
-		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event2 ->
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event ->
 		{
 			if (playing)
 				slider.setValue(slider.getValue() + 5);
 
 			else
 				playing = true;
-
 			Earth.update((int)slider.getValue());
 		}));
 
@@ -120,11 +124,19 @@ public class Menu
 
 		play.setOnMouseClicked(event ->
 		{
+			if (!is_evolution_loaded)
+			{
+				if (http_mode)
+					Model.set_evolution(combobox.getValue().toString());
+				else
+					Model.init_evolution();
+				is_evolution_loaded = true;
+			}
 			if (!playing)
 				start = (int)slider.getValue();
 
 			slider.setDisable(true);
-			timeline.setCycleCount((2020 - (int)slider.getValue()) / 5);
+			timeline.setCycleCount((2020 - (int)slider.getValue()) / 5 + 1);
 			timeline.play();
 		});
 

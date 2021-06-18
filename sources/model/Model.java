@@ -20,10 +20,14 @@ public class Model
 
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
+	}
 
+	public static void init_evolution()
+	{
 		evolution_collection = new ArrayList<FeatureCollection>();
+		String url;
 
-		for (int i = 0; i < 120; i++)
+		for (int i = 0; i < 121; i++)
 		{
 			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1900 + i) + "-01-01" +
 					"&enddate=" + (1900 + i + 1) + "-01-01";
@@ -60,6 +64,29 @@ public class Model
 
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
 				species_feature_collection.get_name()));
+	}
+
+	public static void set_evolution(String specie)
+	{
+		String specie_space = "";
+		evolution_collection = new ArrayList<FeatureCollection>();
+		String url;
+
+		for (char c : specie.toCharArray())
+		{
+			if (c == ' ')
+				specie_space += "%20";
+
+			else
+				specie_space += c;
+		}
+
+		for (int i = 0; i < 121; i++)
+		{
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space + "&startdate=" +
+					(1900 + i) + "-01-01" + "&enddate=" + (1900 + i + 1) + "-01-01";
+			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie)));
+		}
 	}
 
 	// Occurrences de l'espèce chargée

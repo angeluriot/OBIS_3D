@@ -63,21 +63,15 @@ public class SimpleTest
 	@Test
 	public void HttpIntervalOccurrenceTest()
 	{
-		ArrayList<Integer> test = Model.get_occurrence(33., -79., 3, "Selachii",
-				"2015-07-17", "0001-00-00", 7);
-		int test1 = test.get(0);
-		int test2 = test.get(1);
-		int test3 = test.get(2);
-		int test4 = test.get(3);
-		int test5 = test.get(4);
-		int test6 = test.get(5);
+		Model.set_collection("Selachii");
+		Model.set_evolution("Selachii");
+		int test1 = Model.get_evolution_occurrence(40, -71, 2000);
+		int test2 = Model.get_evolution_occurrence(40, -71, 2005);
+		int test3 = Model.get_evolution_occurrence(40, -71, 2010);
 
-		assertEquals(0,		test1);
-		assertEquals(0,		test2);
-		assertEquals(370,	test3);
-		assertEquals(17, 	test4);
-		assertEquals(0,		test5);
-		assertEquals(0,		test6);
+		assertEquals(139,		test1);
+		assertEquals(150,		test2);
+		assertEquals(4,	test3);
 	}
 
 	@Test
