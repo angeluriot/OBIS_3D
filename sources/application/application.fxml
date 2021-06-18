@@ -119,12 +119,12 @@
             </Slider>
             <HBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
                <children>
-                  <Button mnemonicParsing="false" text="Play" textAlignment="CENTER">
+                  <Button fx:id="play" mnemonicParsing="false" text="Play" textAlignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" text="Pause" textAlignment="CENTER">
+                  <Button fx:id="pause" mnemonicParsing="false" text="Pause" textAlignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -132,7 +132,7 @@
                         <Insets left="55.0" right="55.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Stop" textAlignment="CENTER">
+                  <Button fx:id="stop" mnemonicParsing="false" text="Stop" textAlignment="CENTER">
                      <font>
                         <Font size="15.0" />
                      </font>

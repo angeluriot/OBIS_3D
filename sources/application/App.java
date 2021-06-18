@@ -2,10 +2,7 @@ package application;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import model.Model;
@@ -28,6 +25,15 @@ public class App implements Initializable
 
 	@FXML
 	private Slider slider;
+
+	@FXML
+	private Button play;
+
+	@FXML
+	private Button pause;
+
+	@FXML
+	private Button stop;
 
 	@FXML
 	private Pane pane3D;
@@ -60,6 +66,9 @@ public class App implements Initializable
 		Menu.start_date_picker = start_date_picker;
 		Menu.end_date_picker = end_date_picker;
 		Menu.slider = slider;
+		Menu.play = play;
+		Menu.pause = pause;
+		Menu.stop = stop;
 		Menu.init();
 	}
 }

@@ -1,14 +1,21 @@
 package application;
 
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
+import javafx.geometry.Point3D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Slider;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import model.Model;
 import org.json.JSONException;
 import scene3d.Earth;
@@ -21,11 +28,16 @@ public class Menu
 	public static DatePicker start_date_picker;
 	public static DatePicker end_date_picker;
 	public static Slider slider;
+	public static Button play;
+	public static Button pause;
+	public static Button stop;
+	public static double start;
 
 	public static void init()
 	{
 		selection();
 		dates();
+		evolution();
 	}
 
 	public static void selection()
@@ -79,5 +91,41 @@ public class Menu
 				Earth.update();
 			}
 		});
+	}
+
+	public static void evolution()
+	{
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event2 ->
+		{
+			slider.setValue(slider.getValue() + 5);
+		}));
+
+		slider.setOnMouseReleased(event ->
+		{
+			System.out.println("evolution");
+		});
+
+		play.setOnMouseClicked(event ->
+		{
+			set_start(slider.getValue());
+			timeline.setCycleCount(Animation.INDEFINITE);
+			timeline.play();
+		});
+
+		pause.setOnMouseClicked(event ->
+		{
+			timeline.pause();
+		});
+
+		stop.setOnMouseClicked(event ->
+		{
+			timeline.stop();
+			slider.setValue(start);
+		});
+	}
+
+	public static void set_start(double new_start)
+	{
+		start = new_start;
 	}
 }

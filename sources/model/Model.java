@@ -12,11 +12,21 @@ import java.util.ArrayList;
 public class Model
 {
 	private static FeatureCollection species_feature_collection;
+	private static ArrayList<FeatureCollection> evolution_collection;
 
 	public static void init_collection()
 	{
+		String url;
+
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
+		for(int i = 0; i < 70; i++)
+		{
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1950 + i) +
+					"&enddate=" + (1950 + i + 1);
+			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
+					"Delphinidae")));
+		}
 	}
 
 	public static FeatureCollection get_feature_collection()
@@ -67,6 +77,22 @@ public class Model
 		return res;
 	}
 
+	public static int get_evolution_occurrence(double lat, double lon, double year)
+	{
+		int res = 0;
+
+		for (Feature f : evolution_collection.get((int)year - 1950).get_features())
+		{
+			Point2D point_min = f.get_zone().get_coords()[0];
+			Point2D point_max = f.get_zone().get_coords()[2];
+
+			if (lat > point_min.getX() && lat < point_max.getX() && lon > point_min.getY() && lon < point_max.getY())
+				res += f.get_number();
+		}
+
+		return res;
+	}
+
 	// Occurrences d'une espèce de l'api à certaines coordonnées
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie)
 	{
@@ -85,7 +111,8 @@ public class Model
 
 	// Occurrences d'une espèce de l'api à certaines coordonnées et pendant un intervalle de temps
 	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
-	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date, String end_date)
+	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date,
+									 String end_date)
 	{
 		int res = 0;
 		String geohash = gps_to_geohash((float) lat, (float) lon, geohash_precision);
