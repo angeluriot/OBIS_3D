@@ -22,26 +22,14 @@ public class Menu
 	public static DatePicker end_date_picker;
 	public static Slider slider;
 
-	public static void selection(Scene scene)
+	public static void init()
 	{
-		start_date_picker.setOnAction(event ->
-		{
-			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
-			{
-				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
-				Earth.update();
-			}
-		});
+		selection();
+		dates();
+	}
 
-		end_date_picker.setOnAction(event ->
-		{
-			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
-			{
-				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
-				Earth.update();
-			}
-		});
-
+	public static void selection()
+	{
 		combobox.setOnAction(event ->
 		{
 			try
@@ -70,6 +58,26 @@ public class Menu
 				}
 			}
 		});
+	}
 
+	public static void dates()
+	{
+		start_date_picker.setOnAction(event ->
+		{
+			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
+			{
+				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
+				Earth.update();
+			}
+		});
+
+		end_date_picker.setOnAction(event ->
+		{
+			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
+			{
+				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
+				Earth.update();
+			}
+		});
 	}
 }

@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import model.Model;
 import scene3d.Earth;
 import scene3d.Legend;
 
@@ -48,13 +49,17 @@ public class App implements Initializable
 		slider.setMajorTickUnit(20);
 		slider.setMinorTickCount(1);
 
+		Model.init_collection();
+
+		Legend.min = min;
+		Legend.max = max;
+
+		Earth.init(pane3D);
+
 		Menu.combobox = combobox;
 		Menu.start_date_picker = start_date_picker;
 		Menu.end_date_picker = end_date_picker;
 		Menu.slider = slider;
-
-		Legend.min = min;
-		Legend.max = max;
-		Earth.init(pane3D);
+		Menu.init();
 	}
 }
