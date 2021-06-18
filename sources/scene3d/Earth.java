@@ -30,6 +30,7 @@ public class Earth
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
 	private static SubScene sub_scene;
 	private static Pane pane;
+	private static int max_occurences;
 	
 	public static void init(Pane pane3D)
 	{
@@ -80,7 +81,7 @@ public class Earth
 		// Add sub scene
 		sub_scene = new SubScene(root, 600, 600, true, SceneAntialiasing.BALANCED);
 		sub_scene.setCamera(camera);
-		sub_scene.setFill(Color.GRAY);
+		sub_scene.setFill(new Color(0.15, 0.155, 0.17, 1));
 		pane.getChildren().addAll(sub_scene);
 		pane.getChildren().add(root);
 		
@@ -101,14 +102,12 @@ public class Earth
 	
 	private static PhongMaterial get_color(float lat, float lon)
 	{
-		final int min = 0;
-		final int max = Model.get_max_occurrence();
 		final int number = Model.get_local_occurrence(lat, lon);
 		
 		if (number == 0)
 			return null;
 		
-		final int color_nb = (int)(((float)(number - min) / (float)(max - min)) * 8);
+		final int color_nb = (int)(((float)number / (float)max_occurences) * 8);
 		
 		return new PhongMaterial(new Color(1, (float)color_nb / 8, 0, 0.5));
 	}
@@ -154,6 +153,8 @@ public class Earth
 	
 	private static void show_data_quadrilaterals(Group earth)
 	{
+		max_occurences = Model.get_max_occurrence();
+		
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
 			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
 				add_quadrilateral(earth, geo_coord_to_3d_coord(lat, lon, 1),
@@ -166,10 +167,10 @@ public class Earth
 	public static void handle_events(Stage stage)
 	{
 		sub_scene.setWidth(stage.getWidth() - 315);
-		sub_scene.setHeight(stage.getHeight());
+		sub_scene.setHeight(stage.getHeight() - 30);
 		
 		pane.setPrefWidth(stage.getWidth() - 315);
-		pane.setPrefWidth(stage.getHeight());
+		pane.setPrefWidth(stage.getHeight() - 30);
 		
 		stage.widthProperty().addListener((obs, oldVal, newVal) ->
 		{
@@ -179,8 +180,8 @@ public class Earth
 		
 		stage.heightProperty().addListener((obs, oldVal, newVal) ->
 		{
-			sub_scene.setHeight(newVal.doubleValue());
-			pane.setPrefHeight(newVal.doubleValue());
+			sub_scene.setHeight(newVal.doubleValue() - 30);
+			pane.setPrefHeight(newVal.doubleValue() - 30);
 		});
 	}
 }
