@@ -6,11 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
-<<<<<<< HEAD
 import javafx.scene.control.ComboBox;
-=======
 import javafx.scene.control.Label;
->>>>>>> app3D
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
