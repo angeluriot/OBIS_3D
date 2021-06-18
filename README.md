@@ -12,7 +12,7 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 <br/>
 
 <p align="center">
-	<img src="https://i.imgur.com/DzpWJEt.png" width="700">
+	<img src="https://i.imgur.com/Any94qm.png" width="700">
 </p>
 
 <br/>
