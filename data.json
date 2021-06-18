@@ -1,0 +1,41 @@
+{
+	"batchcomplete":
+		"",
+		"query":
+			{
+				"searchinfo":
+					{
+						"totalhits":3
+					},
+				"search":
+					[
+						{
+							"ns":0,
+							"title":"Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maungah­oronuku­pokai­whenuaki­tanatahu",
+							"pageid":71345,
+							"size":18635,
+							"wordcount":1691,
+							"snippet":"Taumata­whakatangihanga­koauau­o­tamatea­turi­pukaka­piki­maungah­oronuku­pokai­whenuaki­tanatahu (prononcé en maori de Nouvelle-Zélande : [tɐʉmɐtɐ.ɸɐkɐtɐŋihɐŋɐ.koːɐʉɐʉ.ɔ.tɐmɐtɛɐ.tʉɾi.pʉkɐkɐ.piki.mɐʉŋɐ.hɔɾɔ.nʉkʉ.pɔkɐi.ɸɛnʉɐ.ki.tɐnɐ.tɐhʉ]), simplement appelée Taumata ou Taumata Hill dans le langage courant, est une colline de Nouvelle-Zélande située sur l'île du Nord et culminant à 305 mètres d'altitude. Elle est connue pour son nom qui est l'un des plus longs du monde avec 85 lettres pour le toponyme enregistré par le livre Guinness des records. Son étymologie repose sur une légende maori mettant en scène Tamatea, un ancêtre maori. Le lieu est signalé par un panneau dont la longueur est démesurée, ce qui en fait une destination touristique.",
+							"timestamp":"2021-03-21T23:07:36Z"
+						},
+						{
+							"ns":0,
+							"title":"Liste des toponymes les plus longs",
+							"pageid":43769,
+							"size":7381,
+							"wordcount":713,
+							"snippet":"Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu, Llanfairpwllgwyngyllgogerychwy,  Gorsafawddacha'idraigodanheddogleddollônpenrhynareurdraethceredigion, ...",
+							"timestamp":"2020-09-02T20:21:36Z"
+						},
+						{
+							"ns":0,
+							"title":"Île du Nord",
+							"pageid":415033,
+							"size":6091,
+							"wordcount":506,
+							"snippet":"de Tongariro Rivière Tongariro <span class=\"searchmatch\">Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu</span> Waikato Waipoua Kauri Forest Selon",
+							"timestamp":"2020-09-01T10:52:20Z"
+						}
+					]
+			}
+}
