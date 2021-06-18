@@ -19,7 +19,7 @@ public class Model
 				"resources/data/Delphinidae.json", "Delphinidae"));
 	}
 
-	public static FeatureCollection get_feature_collection(String specie)
+	public static FeatureCollection get_feature_collection()
 	{
 		return species_feature_collection;
 	}
@@ -41,7 +41,7 @@ public class Model
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie));
 	}
 
-	public static void set_collection(String start_date, String end_date)
+	public static void set_date(String start_date, String end_date)
 	{
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + species_feature_collection.get_name()
 				+ "&startdate=" + start_date + "&enddate=" + end_date;

@@ -1,32 +1,29 @@
 package application;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.SceneAntialiasing;
-import javafx.scene.SubScene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import scene3d.Earth;
 import scene3d.Legend;
 
-import model.Model;
-
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class App implements Initializable
 {
 	@FXML
 	private ComboBox combobox;
+
+	@FXML
+	private DatePicker start_date_picker;
+
+	@FXML
+	private DatePicker end_date_picker;
 
 	@FXML
 	private Slider slider;
@@ -49,6 +46,8 @@ public class App implements Initializable
 		slider.setMinorTickCount(1);
 
 		Menu.combobox = combobox;
+		Menu.start_date_picker = start_date_picker;
+		Menu.end_date_picker = end_date_picker;
 		Menu.slider = slider;
 
 		Legend.max = max;

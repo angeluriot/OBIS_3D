@@ -81,7 +81,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Label>
-            <HBox prefHeight="30.0" prefWidth="217.0">
+            <HBox fx:id="date_hbox" prefHeight="30.0" prefWidth="217.0">
                <children>
                   <Label text="De : ">
                      <font>
@@ -91,7 +91,7 @@
                         <Insets top="4.0" />
                      </padding>
                   </Label>
-                  <DatePicker prefWidth="106.0" style="-fx-font-size: 15;" />
+                  <DatePicker fx:id="start_date_picker" prefWidth="106.0" style="-fx-font-size: 15;" />
                   <Label text="  à : ">
                      <font>
                         <Font size="15.0" />
@@ -100,7 +100,7 @@
                         <Insets top="4.0" />
                      </padding>
                   </Label>
-                  <DatePicker prefWidth="106.0" style="-fx-font-size: 15;" />
+                  <DatePicker fx:id="end_date_picker" prefWidth="106.0" style="-fx-font-size: 15;" />
                </children>
             </HBox>
             <Separator prefHeight="50.0" />
