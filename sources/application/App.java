@@ -41,6 +41,9 @@ public class App implements Initializable
 	private Label max;
 
 	@FXML
+	private Label min;
+
+	@FXML
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		slider.setShowTickLabels(true);
@@ -51,6 +54,7 @@ public class App implements Initializable
 		Menu.combobox = combobox;
 		Menu.slider = slider;
 
+		Legend.min = min;
 		Legend.max = max;
 		Earth.init(pane3D);
 	}

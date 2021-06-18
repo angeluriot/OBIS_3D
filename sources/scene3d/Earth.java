@@ -26,6 +26,7 @@ public class Earth
 	private static final float ZONE_SIZE = 360.f / 256.f;
 	private static final float TEXTURE_LAT_OFFSET = -0.2f;
 	private static final float TEXTURE_LON_OFFSET = 2.8f;
+	private static CameraManager camera_manager;
 	private static SubScene sub_scene;
 	private static Pane pane;
 	private static Group squares;
@@ -64,7 +65,7 @@ public class Earth
 
 		// Add a camera group
 		PerspectiveCamera camera = new PerspectiveCamera(true);
-		new CameraManager(camera, pane, root);
+		camera_manager = new CameraManager(camera, pane, root);
 
 		// Add point light
 		PointLight light = new PointLight(Color.WHITE);
@@ -96,6 +97,8 @@ public class Earth
 		show_data_squares(squares);
 
 		Legend.update(Model.get_max_occurrence());
+
+		camera_manager.force_update();
 	}
 
 	public static Point3D geo_coord_to_3d_coord(float lat, float lon, float height)
@@ -118,7 +121,13 @@ public class Earth
 
 		final int color_nb = (int)(((float)(number - 1) / (float)(Model.get_max_occurrence() - 1)) * 7);
 
-		return new PhongMaterial(new Color(1, (float)color_nb / 7, 0, 0.5));
+		return new PhongMaterial(new Color(1, (float)color_nb / 7, 0, 1));
+	}
+
+	private static float get_size(float lat, float lon)
+	{
+		final int number = Model.get_local_occurrence(lat, lon);
+		return (float)number / (float)Model.get_max_occurrence();
 	}
 
 	private static void add_square(Group parent, Point3D top_left, Point3D top_right, Point3D bottom_right, Point3D bottom_left, PhongMaterial material)
@@ -160,15 +169,14 @@ public class Earth
 		parent.getChildren().addAll(mesh_view);
 	}
 
-	public static void test(Group parent, float lat, float lon, PhongMaterial material)
+	public static void test(Group parent, float lat, float lon, PhongMaterial material, float size)
 	{
 		if (material == null)
 			return;
 
 		Point3D from = geo_coord_to_3d_coord(lat, lon, 1.0f);
-		Box box = new Box(0.01f,0.01f,0.01f);
+		Box box = new Box(0.01f, 0.01f, size);
 		box.setMaterial(material);
-		//box.setTranslateX(-1);
 
 		Point3D to = Point3D.ZERO;
 		Point3D yDir = new Point3D(0, 1, 0);
@@ -178,6 +186,7 @@ public class Earth
 		affine.append(Math3D.lookAt(from, to, yDir));
 		group.getTransforms().setAll(affine);
 		group.getChildren().addAll(box);
+		group.setTranslateX(-1);
 
 		parent.getChildren().addAll(group);
 	}
@@ -186,12 +195,8 @@ public class Earth
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
 			for (float lon = -180; lon < 180; lon += ZONE_SIZE)
-				add_square(parent, geo_coord_to_3d_coord(lat, lon, 1),
-					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon, 1),
-					geo_coord_to_3d_coord(lat + ZONE_SIZE, lon + ZONE_SIZE, 1),
-					geo_coord_to_3d_coord(lat, lon + ZONE_SIZE, 1),
-					get_color(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2));
-				//test(parent, lat, lon, get_color(lat, lon));
+				test(parent, lat, lon, get_color(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2),
+					get_size(lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2));
 	}
 
 	public static void handle_events(Stage stage)

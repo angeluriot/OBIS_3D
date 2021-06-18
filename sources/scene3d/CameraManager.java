@@ -57,6 +57,12 @@ public class CameraManager
 		handleMouse(mainRoot, root);
 	}
 
+	public void force_update()
+	{
+		camera.setTranslateZ(camera.getTranslateZ() - 0.001);
+		camera.setTranslateZ(camera.getTranslateZ() + 0.001);
+	}
+
 	private void handleMouse(Node mainRoot, final Node root)
 	{
 		mainRoot.setOnMousePressed(new EventHandler<MouseEvent>()

@@ -34,8 +34,17 @@ public class Menu
 
 			catch (JSONException e)
 			{
-				combobox.setItems(FXCollections.observableList(Model.get_species(combobox.getValue().toString())));
-				combobox.show();
+				if (combobox.getValue().toString().equals(""))
+				{
+					Model.init_collection();
+					Earth.update();
+				}
+
+				else
+				{
+					combobox.setItems(FXCollections.observableList(Model.get_species(combobox.getValue().toString())));
+					combobox.show();
+				}
 			}
 		});
 
