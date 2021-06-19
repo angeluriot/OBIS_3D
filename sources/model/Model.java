@@ -57,7 +57,7 @@ public class Model
 		}
 
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space;
-		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie));
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space));
 	}
 
 	public static void set_date(String start_date, String end_date)
@@ -90,7 +90,7 @@ public class Model
 		{
 			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space + "&startdate=" +
 					(1900 + i) + "-01-01" + "&enddate=" + (1900 + i + 1) + "-01-01";
-			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie)));
+			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space)));
 		}
 	}
 

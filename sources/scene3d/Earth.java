@@ -5,8 +5,11 @@ import com.interactivemesh.jfx.importer.ImportException;
 import com.interactivemesh.jfx.importer.obj.ObjModelImporter;
 import features.FeatureCollection;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.scene.*;
@@ -172,7 +175,34 @@ public class Earth
 
 	public static void click_on_void(MouseEvent event, float lat, float lon)
 	{
+		ArrayList<String> names = Model.get_species_from_geohash(Model.gps_to_geohash(lat, lon, 3));
+		ObservableList<String> list = FXCollections.observableArrayList();
 
+		if (names.size() > 0)
+		{
+			for (String name : names)
+				list.add(name);
+
+			list_view = new ListView(list);
+			list_view.setFixedCellSize(30);
+			list_view.setStyle("-fx-font-size : 11pt");
+			list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
+			list_view.setPrefWidth(300);
+			list_view.setTranslateX(event.getSceneX());
+			list_view.setTranslateY(event.getSceneY());
+
+			anchor_pane.getChildren().add(list_view);
+
+			list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					Menu.combobox.setValue(newValue);
+					Menu.combobox.fireEvent(new ActionEvent());
+					anchor_pane.getChildren().remove(list_view);
+				}
+			});
+		}
 	}
 
 	public static void update(int year)
