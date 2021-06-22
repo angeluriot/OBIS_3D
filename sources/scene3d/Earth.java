@@ -288,13 +288,16 @@ public class Earth
 		if (number == 0)
 			return null;
 
-		final int color_nb = (int)(((float)(number - 1) / (float)(Model.get_max_occurrence() - 1)) * 7);
+		final int color_nb = (int)(((float)(number - 1) / (float)(Model.get_max_occurrence())) * 7);
 
-		return new PhongMaterial(new Color(1, (float)color_nb / 7, 0, 1));
+		return new PhongMaterial(new Color(1, Math.max(0f, Math.min(1f, (float)color_nb / 7)), 0, 1));
 	}
 
 	private static float get_size(float lat, float lon, int number)
 	{
+		if (Model.get_max_occurrence() == 0)
+			return 0f;
+
 		return (float)number / (float)Model.get_max_occurrence();
 	}
 
