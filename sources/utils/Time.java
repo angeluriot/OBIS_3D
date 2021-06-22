@@ -141,12 +141,12 @@ public class Time
 
 		yyyymmdd = year + "-";
 
-		if(month < 10)
+		if (month < 10)
 			yyyymmdd += "0";
 
 		yyyymmdd += (month + "-");
 
-		if(day < 10)
+		if (day < 10)
 			yyyymmdd += "0";
 
 		yyyymmdd += (day);

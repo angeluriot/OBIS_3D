@@ -21,21 +21,20 @@ public class SimpleTest
         FeatureCollection feature_collection = Model.get_feature_collection();
 
 		assertNotEquals(null, feature_collection);
-		if(feature_collection == null)
-		{
+
+		if (feature_collection == null)
 			throw new Exception();
-		}
 
         try
         {
-            if(!feature_collection.get_name().equals("Delphinidae"))
+            if (!feature_collection.get_name().equals("Delphinidae"))
             	throw new Exception();
         }
+
         catch (Exception e)
 		{
         	e.printStackTrace();
         }
-
 	}
 
 	@Test
@@ -80,9 +79,9 @@ public class SimpleTest
 		int test2 = Model.get_evolution_occurrence(40, -71, 2005);
 		int test3 = Model.get_evolution_occurrence(40, -71, 2010);
 
-		assertEquals(922,		test1);
-		assertEquals(306,		test2);
-		assertEquals(28,		test3);
+		assertEquals(922, test1);
+		assertEquals(306, test2);
+		assertEquals(28, test3);
 	}
 
 	@Test
@@ -117,16 +116,15 @@ public class SimpleTest
 		boolean test_Acritarcha = false;
 		boolean test_Acidobacteria = false;
 
-		for(String specie : test)
-		{
-			switch (specie) {
+		for (String specie : test)
+			switch (specie)
+			{
 				case "Actinobacteria" -> test_Actinobacteria = true;
 				case "Acanthocephala" -> test_Acanthocephala = true;
 				case "Aculifera" -> test_Aculifera = true;
 				case "Acritarcha" -> test_Acritarcha = true;
 				case "Acidobacteria" -> test_Acidobacteria = true;
 			}
-		}
 
 		assertTrue("Actinobacteria not found", test_Actinobacteria);
 		assertTrue("Acanthocephala not found", test_Acanthocephala);

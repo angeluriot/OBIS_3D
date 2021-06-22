@@ -120,13 +120,14 @@ public class Menu
 		// Animation du Slider et mise à jour de Earth à chaque itération
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event ->
 		{
-			if(slider.getValue() != 2015)
+			if (slider.getValue() != 2015)
 			{
 				if (playing)
 					slider.setValue(slider.getValue() + 5);
 
 				else
 					playing = true;
+
 				Earth.update((int)slider.getValue());
 			}
 		}));
@@ -149,8 +150,10 @@ public class Menu
 					Model.set_evolution(combobox.getValue().toString());
 				else
 					Model.init_evolution();
+
 				is_evolution_loaded = true;
 			}
+
 			if (!playing)
 				start = (int)slider.getValue();
 

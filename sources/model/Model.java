@@ -423,7 +423,6 @@ public class Model
 					idx = idx * 2;
 					lon_max = lonMid;
 				}
-
 			}
 
 			else

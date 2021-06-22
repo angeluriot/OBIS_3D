@@ -56,6 +56,12 @@ public class Earth
 	private static HBox hbox;
 	private static boolean first_click = true;
 
+	/**
+	 * Initialise la vue 3D du globe
+	 * @param pane3D Pane où est affiché la vue
+	 * @param anchor_pane3D Pane où est affiché la vue et la légende
+	 * @param true_root Racine de la scène
+	 */
 	public static void init(Pane pane3D, AnchorPane anchor_pane3D, HBox true_root)
 	{
 		hbox = true_root;
@@ -116,6 +122,9 @@ public class Earth
 		handle_click();
 	}
 
+	/**
+	 * Gère les clics droits sur la vue 3D
+	 */
 	public static void handle_click()
 	{
 		earth.addEventHandler(MouseEvent.ANY, event ->
@@ -155,6 +164,12 @@ public class Earth
 		});
 	}
 
+	/**
+	 * Affiche des listes lorsque le l'utilisateur clique sur une donnée
+	 * @param event Evénement de la souris
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 */
 	public static void click_on_data(MouseEvent event, float lat, float lon)
 	{
 		observations = Model.get_observation(Model.gps_to_geohash(lat, lon, 3));
@@ -185,6 +200,7 @@ public class Earth
 			anchor_pane.getChildren().add(list_view);
 			list_view.toFront();
 
+			// Lors du clic sur une observation de la liste
 			list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
 			{
 				@Override
@@ -213,6 +229,12 @@ public class Earth
 		}
 	}
 
+	/**
+	 * Affiche une liste lorsque le l'utilisateur clique sur le globe
+	 * @param event Evénement de la souris
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 */
 	public static void click_on_void(MouseEvent event, float lat, float lon)
 	{
 		ArrayList<String> names = Model.get_species_from_geohash(Model.gps_to_geohash(lat, lon, 3));
@@ -245,6 +267,10 @@ public class Earth
 		}
 	}
 
+	/**
+	 * Met à jour la vue 3D
+	 * @param year Année montrée
+	 */
 	public static void update(int year)
 	{
 		anchor_pane.getChildren().remove(list_view);
@@ -258,6 +284,13 @@ public class Earth
 		camera_manager.force_update();
 	}
 
+	/**
+	 * Convertit les coordonnées terrestres en coordonnées 3D
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 * @param height Hauteur
+	 * @return Les coordonnées 3D
+	 */
 	public static Point3D geo_coord_to_3d_coord(float lat, float lon, float height)
 	{
 		float lat_cor = lat + TEXTURE_LAT_OFFSET;
@@ -269,6 +302,11 @@ public class Earth
 			java.lang.Math.cos(java.lang.Math.toRadians(lon_cor)) * java.lang.Math.cos(java.lang.Math.toRadians(lat_cor)));
 	}
 
+	/**
+	 * Convertit les coordonnées 3D en coordonnées terrestres
+	 * @param point Point 3D
+	 * @return Les coordonnées terrestres
+	 */
 	public static Point2D coord_3d_to_geo_coord(Point3D point)
 	{
 		double latitude = (float)(Math.asin(-point.getY()) * (180 / Math.PI) - TEXTURE_LAT_OFFSET);
@@ -283,6 +321,13 @@ public class Earth
 		return new Point2D(latitude, longitude);
 	}
 
+	/**
+	 * Donne la couleur de la barre de donnée
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 * @param number Nombre d'occurrences
+	 * @return La couleur correspondante
+	 */
 	private static PhongMaterial get_color(float lat, float lon, int number)
 	{
 		if (number == 0)
@@ -293,6 +338,13 @@ public class Earth
 		return new PhongMaterial(new Color(1, Math.max(0f, Math.min(1f, (float)color_nb / 7)), 0, 1));
 	}
 
+	/**
+	 * Donne la taille de la barre de donnée
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 * @param number Nombre d'occurrences
+	 * @return La taille correspondante
+	 */
 	private static float get_size(float lat, float lon, int number)
 	{
 		if (Model.get_max_occurrence() == 0)
@@ -301,6 +353,13 @@ public class Earth
 		return (float)number / (float)Model.get_max_occurrence();
 	}
 
+	/**
+	 * Ajoute une barre de donnée sur le globe
+	 * @param parent Noeud JavaFX parent
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 * @param year Année montrée
+	 */
 	public static void add_square(Group parent, float lat, float lon, int year)
 	{
 		final int number;
@@ -321,16 +380,21 @@ public class Earth
 		box.setMaterial(material);
 
 		Point3D to = Point3D.ZERO;
-		Point3D yDir = new Point3D(0, 1, 0);
+		Point3D y_dir = new Point3D(0, 1, 0);
 
 		Group group = new Group();
 		Affine affine = new Affine();
-		affine.append(Math3D.lookAt(from, to, yDir));
+		affine.append(Math3D.look_at(from, to, y_dir));
 		group.getTransforms().setAll(affine);
 		group.getChildren().addAll(box);
 		parent.getChildren().addAll(group);
 	}
 
+	/**
+	 * Affiche les barres de données sur le globe
+	 * @param parent Noeud JavaFX parent
+	 * @param year Année montrée
+	 */
 	private static void show_data_squares(Group parent, int year)
 	{
 		for (float lat = -180; lat < 180; lat += ZONE_SIZE)
@@ -338,6 +402,10 @@ public class Earth
 				add_square(parent, lat + ZONE_SIZE / 2, lon + ZONE_SIZE / 2, year);
 	}
 
+	/**
+	 * Change la taille de la vue 3D en fonction de la taille de la fenêtre
+	 * @param stage
+	 */
 	public static void handle_events(Stage stage)
 	{
 		sub_scene.setWidth(stage.getWidth() - 315);
