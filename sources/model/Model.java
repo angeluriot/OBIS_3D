@@ -23,6 +23,8 @@ public class Model
 
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
+		start_date = "";
+		end_date = "";
 	}
 
 	public static void init_evolution()
@@ -30,10 +32,10 @@ public class Model
 		evolution_collection = new ArrayList<FeatureCollection>();
 		String url;
 
-		for (int i = 0; i < 121; i++)
+		for (int i = 0; i < 24; i++)
 		{
-			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1900 + i) + "-01-01" +
-					"&enddate=" + (1900 + i + 1) + "-01-01";
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=Delphinidae&startdate=" + (1900 + 5 * i) + "-01-01" +
+					"&enddate=" + (1900 + 5 * i + 5) + "-01-01";
 			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), "Delphinidae")));
 		}
 	}
@@ -58,6 +60,8 @@ public class Model
 
 		String url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space;
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space));
+		start_date = "";
+		end_date = "";
 	}
 
 	public static void set_date(String start_date, String end_date)
@@ -86,10 +90,10 @@ public class Model
 				specie_space += c;
 		}
 
-		for (int i = 0; i < 121; i++)
+		for (int i = 0; i < 24; i++)
 		{
-			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space + "&startdate=" +
-					(1900 + i) + "-01-01" + "&enddate=" + (1900 + i + 1) + "-01-01";
+			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space + "&startdate=" + (1900 + 5 * i) + "-01-01" +
+					"&enddate=" + (1900 + 5 * i + 5) + "-01-01";
 			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space)));
 		}
 	}
@@ -115,7 +119,7 @@ public class Model
 	{
 		int res = 0;
 
-		for (Feature f : evolution_collection.get(year - 1900).get_features())
+		for (Feature f : evolution_collection.get((year - 1900) / 5).get_features())
 		{
 			Point2D point_min = f.get_zone().get_coords()[0];
 			Point2D point_max = f.get_zone().get_coords()[2];

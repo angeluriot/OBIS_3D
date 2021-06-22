@@ -41,27 +41,38 @@ public class SimpleTest
 	@Test
 	public void LoadTest()
 	{
+		Model.init_collection();
+		assertEquals("Delphinidae", Model.get_feature_collection().get_name());
 	    Model.set_collection("Selachii");
 	    assertEquals("Selachii", Model.get_feature_collection().get_name());
+	    Model.set_collection("Cetacea");
+	    assertEquals("Cetacea", Model.get_feature_collection().get_name());
 	}
 
 	@Test
-	public void HttpOccurrenceTest()
+	public void OccurrenceTest()
 	{
+		Model.init_collection();
+		assertEquals(8147, Model.get_local_occurrence(33, -79));
 		Model.set_collection("Selachii");
 		assertEquals(163261, Model.get_local_occurrence(-19, 147));
+		Model.set_collection("Cetacea");
+		assertEquals(51448, Model.get_local_occurrence(24, -78));
 	}
 
 	@Test
-	public void HttpDateOccurrenceTest()
+	public void DateOccurrenceTest()
 	{
+		Model.init_collection();
+		Model.set_date("2000-01-01", "2005-01-01");
+		assertEquals(126, Model.get_local_occurrence(40, -71));
 		Model.set_collection("Selachii");
 		Model.set_date("2015-06-17", "2021-06-17");
 		assertEquals(20218, Model.get_local_occurrence(40, -71));
 	}
 
 	@Test
-	public void HttpIntervalOccurrenceTest()
+	public void IntervalOccurrenceTest()
 	{
 		Model.set_collection("Selachii");
 		Model.set_evolution("Selachii");
@@ -69,16 +80,25 @@ public class SimpleTest
 		int test2 = Model.get_evolution_occurrence(40, -71, 2005);
 		int test3 = Model.get_evolution_occurrence(40, -71, 2010);
 
-		assertEquals(139,		test1);
-		assertEquals(150,		test2);
-		assertEquals(4,	test3);
+		assertEquals(922,		test1);
+		assertEquals(306,		test2);
+		assertEquals(28,		test3);
 	}
 
 	@Test
 	public void ObservationTest()
 	{
-		Model.set_collection("Selachii");
+		Model.init_collection();
 		Observation test = Model.get_observation("spd").get(0);
+
+		assertEquals("Stenella coeruleoalba", test.get_scientific_name());
+		assertEquals("Cetartiodactyla", test.get_order());
+		assertEquals("Tetrapoda", test.get_super_class());
+		// Il n'y a pas de "recordedBy"
+		assertEquals("Stenella coeruleoalba", test.get_specie());
+
+		Model.set_collection("Selachii");
+		test = Model.get_observation("spd").get(0);
 
 		assertEquals("Oxynotus centrina", test.get_scientific_name());
 		assertEquals("Squaliformes", test.get_order());

@@ -106,12 +106,15 @@ public class Menu
 	{
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event ->
 		{
-			if (playing)
-				slider.setValue(slider.getValue() + 5);
+			if(slider.getValue() != 2015)
+			{
+				if (playing)
+					slider.setValue(slider.getValue() + 5);
 
-			else
-				playing = true;
-			Earth.update((int)slider.getValue());
+				else
+					playing = true;
+				Earth.update((int)slider.getValue());
+			}
 		}));
 
 		timeline.setOnFinished((finish) ->
