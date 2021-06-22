@@ -2,8 +2,8 @@ package features;
 
 public class FeatureCollection
 {
-	private String name;
-	private Feature[] features;
+	private final String name;
+	private final Feature[] features;
 	private int max_occurrence;
 
 	public FeatureCollection(String name, Feature[] features)
@@ -38,6 +38,13 @@ public class FeatureCollection
 		}
 
 		max_occurrence = max;
+	}
+
+	public FeatureCollection(FeatureCollection other, int max_occurrence)
+	{
+		name = other.get_name();
+		features = other.get_features();
+		this.max_occurrence = max_occurrence;
 	}
 
 	public final String get_name()

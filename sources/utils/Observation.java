@@ -2,11 +2,11 @@ package utils;
 
 public class Observation
 {
-	private String scientific_name;
-	private String order;
-	private String super_class;
-	private String recorded_by;
-	private String specie;
+	private final String scientific_name;
+	private final String order;
+	private final String super_class;
+	private final String recorded_by;
+	private final String specie;
 
 	public Observation(String scientific_name, String order, String super_class, String recorded_by, String specie)
 	{

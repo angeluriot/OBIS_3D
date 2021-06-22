@@ -19,8 +19,6 @@ public class Model
 
 	public static void init_collection()
 	{
-		String url;
-
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
 				"resources/data/Delphinidae.json", "Delphinidae"));
 		start_date = "";
@@ -29,7 +27,7 @@ public class Model
 
 	public static void init_evolution()
 	{
-		evolution_collection = new ArrayList<FeatureCollection>();
+		evolution_collection = new ArrayList<>();
 		String url;
 
 		for (int i = 0; i < 24; i++)
@@ -64,6 +62,25 @@ public class Model
 		end_date = "";
 	}
 
+	public static void set_collection(String specie, int geohash_precision)
+	{
+		String specie_space = "";
+
+		for (char c : specie.toCharArray())
+		{
+			if (c == ' ')
+				specie_space += "%20";
+
+			else
+				specie_space += c;
+		}
+
+		String url = "https://api.obis.org/v3/occurrence/grid/" + geohash_precision + "?scientificname=" + specie_space;
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space));
+		start_date = "";
+		end_date = "";
+	}
+
 	public static void set_date(String start_date, String end_date)
 	{
 		Model.start_date = start_date;
@@ -72,7 +89,18 @@ public class Model
 				+ "&startdate=" + start_date + "&enddate=" + end_date;
 
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
-				species_feature_collection.get_name()));
+				species_feature_collection.get_name()), species_feature_collection.get_max_occurrence());
+	}
+
+	public static void set_date(String start_date, String end_date, int geohash_precision)
+	{
+		Model.start_date = start_date;
+		Model.end_date = end_date;
+		String url = "https://api.obis.org/v3/occurrence/grid/" + geohash_precision + "?scientificname=" + species_feature_collection.get_name()
+				+ "&startdate=" + start_date + "&enddate=" + end_date;
+
+		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url),
+				species_feature_collection.get_name()), species_feature_collection.get_max_occurrence());
 	}
 
 	public static void set_evolution(String specie)
@@ -94,6 +122,29 @@ public class Model
 		{
 			url = "https://api.obis.org/v3/occurrence/grid/3?scientificname=" + specie_space + "&startdate=" + (1900 + 5 * i) + "-01-01" +
 					"&enddate=" + (1900 + 5 * i + 5) + "-01-01";
+			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space)));
+		}
+	}
+
+	public static void set_evolution(String specie, int geohash_precision)
+	{
+		String specie_space = "";
+		evolution_collection = new ArrayList<FeatureCollection>();
+		String url;
+
+		for (char c : specie.toCharArray())
+		{
+			if (c == ' ')
+				specie_space += "%20";
+
+			else
+				specie_space += c;
+		}
+
+		for (int i = 0; i < 24; i++)
+		{
+			url = "https://api.obis.org/v3/occurrence/grid/" + geohash_precision + "?scientificname=" + specie_space +
+					"&startdate=" + (1900 + 5 * i) + "-01-01" + "&enddate=" + (1900 + 5 * i + 5) + "-01-01";
 			evolution_collection.add(new FeatureCollection(Read.parseCollectionJson(Read.readJsonFromUrl(url), specie_space)));
 		}
 	}

@@ -1,31 +1,18 @@
 package application;
 
-import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.EventHandler;
-import javafx.geometry.Point3D;
-import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Slider;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import model.Model;
 import org.json.JSONException;
 import scene3d.Earth;
-
-import javax.swing.*;
-import java.util.ArrayList;
 
 public class Menu
 {
@@ -99,6 +86,17 @@ public class Menu
 			if (start_date_picker.getValue() != null && end_date_picker.getValue() != null)
 			{
 				Model.set_date(start_date_picker.getValue().toString(), end_date_picker.getValue().toString());
+				Earth.update(-1);
+			}
+
+			else if (start_date_picker.getValue() == null && end_date_picker.getValue() == null)
+			{
+				if (combobox.getValue().toString().equals(""))
+					Model.init_collection();
+
+				else
+					Model.set_collection(combobox.getValue().toString());
+
 				Earth.update(-1);
 			}
 		});
