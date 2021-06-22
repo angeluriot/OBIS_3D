@@ -23,7 +23,40 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 
 <br/>
 
-# Tests
+# Utilisations
+
+* Le programme peut lire un fichier .json ou chercher les données depuis Internet
+
+* Il est possible de chercher une espèce en haut à droite pour regarder sa répartition sur le globe, si l'espèce n'existe pas le programme affiche les espèces dont le nom commence de la même façon :
+
+<p align="center">
+	<img src="https://i.imgur.com/xI6VDA5.png" width="500">
+</p>
+
+* Il est possible de préciser un intervalle de dates :
+
+<p align="center">
+	<img src="https://i.imgur.com/So0oxek.png" width="500">
+</p>
+
+* La partie évolution permet de faire défiler le temps par période de 5 ans :
+
+<p align="center">
+	<img src="https://i.imgur.com/esxlPdi.png" width="500">
+</p>
+
+* Via un clic droit sur une donnée il est possible de voir les détails de chaque observation :
+
+<p align="center">
+	<img src="https://i.imgur.com/FhcXjRz.png" width="500">
+</p>
+
+* Un clic droit sur le globe montre les différentes espèces répertoriées à l'endroit cliqué et en sélectionner une revient à taper son nom dans la barre de recherche :
+
+<p align="center">
+	<img src="https://i.imgur.com/3EeEXZo.png" width="300">
+	<img src="https://i.imgur.com/6v775gf.png" width="300">
+</p>
 
 <br/>
 
