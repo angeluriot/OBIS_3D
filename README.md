@@ -36,7 +36,7 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 * Il est possible de préciser un intervalle de dates :
 
 <p align="center">
-	<img src="https://i.imgur.com/So0oxek.png" width="500">
+	<img src="https://i.imgur.com/RISmR6T.png" width="510">
 </p>
 
 * La partie évolution permet de faire défiler le temps par période de 5 ans :
@@ -54,8 +54,8 @@ Ce dépôt contient le code source d'une application 3D permettant la visualisat
 * Un clic droit sur le globe montre les différentes espèces répertoriées à l'endroit cliqué et en sélectionner une revient à taper son nom dans la barre de recherche :
 
 <p align="center">
-	<img src="https://i.imgur.com/3EeEXZo.png" width="300">
-	<img src="https://i.imgur.com/6v775gf.png" width="300">
+	<img src="https://i.imgur.com/3EeEXZo.png" width="45%">
+	<img src="https://i.imgur.com/6v775gf.png" width="45%">
 </p>
 
 <br/>
