@@ -57,6 +57,10 @@ public class FeatureCollection
 		return features;
 	}
 
+	/**
+	 * Récupère le nombre maximal d'occurrences sur un GeoHash d'une espèce
+	 * @return le nombre maximal d'occurrences
+	 */
 	public final int get_max_occurrence()
 	{
 		return max_occurrence;

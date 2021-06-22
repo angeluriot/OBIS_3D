@@ -28,6 +28,9 @@ public class Menu
 	private static boolean http_mode = false;
 	private static boolean is_evolution_loaded = false;
 
+	/**
+	 * Initialise le menu en appelant toutes les autres méthodes de la classe
+	 */
 	public static void init()
 	{
 		selection();
@@ -35,6 +38,9 @@ public class Menu
 		evolution();
 	}
 
+	/**
+	 * Gère les évènements liés à la ComboBox (entrée du nom de l'espèce)
+	 */
 	public static void selection()
 	{
 		combobox.setOnAction(event ->
@@ -70,6 +76,9 @@ public class Menu
 		});
 	}
 
+	/**
+	 * Gère les évènements liés aux DatePickers (entrée des intervalles de temps)
+	 */
 	public static void dates()
 	{
 		start_date_picker.setOnAction(event ->
@@ -102,8 +111,13 @@ public class Menu
 		});
 	}
 
+	/**
+	 * Gère les évènements liés au Slider, et au Buttons play, pause et stop (évolution sur plusieurs intervalles de
+	 * temps
+	 */
 	public static void evolution()
 	{
+		// Animation du Slider et mise à jour de Earth à chaque itération
 		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event ->
 		{
 			if(slider.getValue() != 2015)
@@ -117,6 +131,7 @@ public class Menu
 			}
 		}));
 
+		// Remet à zéro l'évolution une fois terminée
 		timeline.setOnFinished((finish) ->
 		{
 			slider.setValue(start);
@@ -125,6 +140,7 @@ public class Menu
 			slider.setDisable(false);
 		});
 
+		// Bouton play
 		play.setOnMouseClicked(event ->
 		{
 			if (!is_evolution_loaded)
@@ -144,11 +160,13 @@ public class Menu
 			timeline.play();
 		});
 
+		// Bouton pause
 		pause.setOnMouseClicked(event ->
 		{
 			timeline.pause();
 		});
 
+		// Bouton stop
 		stop.setOnMouseClicked(event ->
 		{
 			timeline.stop();
@@ -158,6 +176,7 @@ public class Menu
 			slider.setDisable(false);
 		});
 
+		// Slider
 		slider.valueProperty().addListener(new ChangeListener<Number>()
 		{
 			@Override

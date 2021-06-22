@@ -20,6 +20,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Read
 {
+	/**
+	 * Permet de lire un fichier et de renvoyer un String de son contenu
+	 * @param rd le fichier
+	 * @return le String
+	 * @throws IOException exception à la lecture du fichier
+	 */
 	public static String readAll(Reader rd) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -31,6 +37,11 @@ public class Read
 		return sb.toString();
 	}
 
+	/**
+	 * Lit un fichier json depuis une url et renvoie son objet
+	 * @param url l'url
+	 * @return l'objet json
+	 */
 	public static JSONObject readJsonFromUrl(String url)
 	{
 		String json = "";
@@ -62,6 +73,11 @@ public class Read
 		return new JSONObject(json);
 	}
 
+	/**
+	 * Lit un fichier json depuis une url et renvoie son tableau
+	 * @param url l'url
+	 * @return le tableau json
+	 */
 	public static JSONArray readJsonArrayFromUrl(String url)
 	{
 		String json = "";
@@ -93,26 +109,12 @@ public class Read
 		return new JSONArray(json);
 	}
 
-	public static String readLocalFile(String file)
-	{
-		try (Reader reader = new java.io.FileReader(file))
-		{
-			BufferedReader rd = new BufferedReader(reader);
-			String jsonText = readAll(rd);
-			JSONObject jsonRoot = new JSONObject(jsonText);
-			JSONArray resultatRecherche = jsonRoot.getJSONObject("query").getJSONArray("search");
-			JSONObject article = resultatRecherche.getJSONObject(0);
-		}
-
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		}
-
-		return "";
-	}
-
+	/**
+	 * Récupère le contenu de chaque observation d'un fichier json sous forme de String
+	 * @param json le fichier json sous forme de String
+	 * @param name le nom de l'espèce dont le json contient les observations
+	 * @return un FeatureCollection contenant les données de chaque observation
+	 */
 	public static FeatureCollection parseCollectionJson(String json, String name)
 	{
 		try (Reader reader = new FileReader(json))
@@ -154,6 +156,12 @@ public class Read
 		}
 	}
 
+	/**
+	 * Récupère le contenu de chaque observation d'un objet json
+	 * @param json l'objet json
+	 * @param name le nom de l'espèce dont le json contient les observations
+	 * @return un FeatureCollection contenant les données de chaque observation
+	 */
 	public static FeatureCollection parseCollectionJson(JSONObject json, String name)
 	{
 		ArrayList<Feature> features_list = new ArrayList<>();
@@ -183,6 +191,11 @@ public class Read
 		return new FeatureCollection(name, feature_array);
 	}
 
+	/**
+	 * Récupère le nom de chaque observation d'un objet json
+	 * @param json l'objet json
+	 * @return la liste des noms
+	 */
 	public static ArrayList<String> parseNamesJson(JSONObject json)
 	{
 		ArrayList<String> names = new ArrayList<>();
@@ -198,6 +211,11 @@ public class Read
 		return names;
 	}
 
+	/**
+	 * Récupère tous les détails d'observation d'un objet json
+	 * @param json l'objet json
+	 * @return la liste des détails d'observation
+	 */
 	public static ArrayList<Observation> parseObservationJson(JSONObject json)
 	{
 		ArrayList<Observation> observations = new ArrayList<>();
@@ -206,7 +224,19 @@ public class Read
 		for (int i = 0; i < results.length(); i++)
 		{
 			JSONObject result = results.getJSONObject(i);
-			String scientific_name = result.getString("scientificName");
+
+			String scientific_name;
+
+			try
+			{
+				scientific_name = result.getString("scientificName");
+			}
+
+			catch (Exception e)
+			{
+				scientific_name = "";
+			}
+
 			String order;
 
 			try
@@ -219,7 +249,18 @@ public class Read
 				order = "";
 			}
 
-			String super_class = result.getString("superclass");
+			String super_class;
+
+			try
+			{
+				super_class = result.getString("superclass");
+			}
+
+			catch (Exception e)
+			{
+				super_class = "";
+			}
+
 			String recorded_by;
 
 			try
@@ -250,6 +291,11 @@ public class Read
 		return observations;
 	}
 
+	/**
+	 * Récupère une liste de noms depuis un tableau json
+	 * @param json_array le tableau json
+	 * @return la liste de noms
+	 */
 	public static ArrayList<String> parseVerboseJson(JSONArray json_array)
 	{
 		ArrayList<String> scientific_names = new ArrayList<>();

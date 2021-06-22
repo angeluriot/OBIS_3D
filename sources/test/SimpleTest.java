@@ -56,8 +56,8 @@ public class SimpleTest
 		assertEquals(8147, Model.get_local_occurrence(33, -79));
 		Model.set_collection("Selachii");
 		assertEquals(163261, Model.get_local_occurrence(-19, 147));
-		Model.set_collection("Cetacea");
-		assertEquals(51448, Model.get_local_occurrence(24, -78));
+		Model.set_collection("Cetacea", 5);
+		assertEquals(1685, Model.get_local_occurrence(27.45, -82.68));
 	}
 
 	@Test
@@ -66,9 +66,9 @@ public class SimpleTest
 		Model.init_collection();
 		Model.set_date("2000-01-01", "2005-01-01");
 		assertEquals(126, Model.get_local_occurrence(40, -71));
-		Model.set_collection("Selachii");
-		Model.set_date("2015-06-17", "2021-06-17");
-		assertEquals(20218, Model.get_local_occurrence(40, -71));
+		Model.set_collection("Selachii", 4);
+		Model.set_date("2015-06-17", "2021-06-17", 4);
+		assertEquals(19078, Model.get_local_occurrence(40.5, -71.5));
 	}
 
 	@Test
@@ -135,6 +135,13 @@ public class SimpleTest
 		assertTrue("Acidobacteria not found", test_Acidobacteria);
 	}
 
+	@Test
+	public void GeohashConversionTest()
+	{
+		assertEquals("spd", Model.gps_to_geohash(42.89f, 3.52f, 3));
+		assertEquals("7zz", Model.gps_to_geohash(0.f, 0.f, 3));
+		assertEquals("czbzur", Model.gps_to_geohash(100.f, -100.f, 6));
+	}
 }
 
 

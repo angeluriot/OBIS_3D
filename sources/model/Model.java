@@ -17,6 +17,9 @@ public class Model
 	private static String start_date = "";
 	private static String end_date = "";
 
+	/**
+	 * Initialise le json local
+	 */
 	public static void init_collection()
 	{
 		species_feature_collection = new FeatureCollection(Read.parseCollectionJson(
@@ -25,6 +28,9 @@ public class Model
 		end_date = "";
 	}
 
+	/**
+	 * Initialise l'évolution du json local
+	 */
 	public static void init_evolution()
 	{
 		evolution_collection = new ArrayList<>();
@@ -38,11 +44,19 @@ public class Model
 		}
 	}
 
+	/**
+	 * Récupère l'espèce chargée
+	 * @return l'espèce chargée
+	 */
 	public static FeatureCollection get_feature_collection()
 	{
 		return species_feature_collection;
 	}
 
+	/**
+	 * Fixe une nouvelle espèce
+	 * @param specie une espèce
+	 */
 	public static void set_collection(String specie)
 	{
 		String specie_space = "";
@@ -62,6 +76,12 @@ public class Model
 		end_date = "";
 	}
 
+	/**
+	 * Fixe une nouvelle espèce en fonction de la précision du GeoHash
+	 * Nous n'utilisons pas cette fonction sauf pour les tests
+	 * @param specie une espèce
+	 * @param geohash_precision la précision du GeoHash
+	 */
 	public static void set_collection(String specie, int geohash_precision)
 	{
 		String specie_space = "";
@@ -81,6 +101,11 @@ public class Model
 		end_date = "";
 	}
 
+	/**
+	 * Fixe un intervalle de temps pour l'espèce chargée
+	 * @param start_date le début de l'intervalle
+	 * @param end_date la fin de l'intervalle
+	 */
 	public static void set_date(String start_date, String end_date)
 	{
 		Model.start_date = start_date;
@@ -92,6 +117,13 @@ public class Model
 				species_feature_collection.get_name()), species_feature_collection.get_max_occurrence());
 	}
 
+	/**
+	 * Fixe un intervalle de temps pour l'espèce chargée en fonction de la précision du GeoHash
+	 * Nous n'utilisons pas cette fonction sauf pour les tests
+	 * @param start_date le début de l'intervalle
+	 * @param end_date la fin de l'intervalle
+	 * @param geohash_precision la précision du GeoHash
+	 */
 	public static void set_date(String start_date, String end_date, int geohash_precision)
 	{
 		Model.start_date = start_date;
@@ -103,6 +135,10 @@ public class Model
 				species_feature_collection.get_name()), species_feature_collection.get_max_occurrence());
 	}
 
+	/**
+	 * Fixe l'évolution de l'espèce chargée
+	 * @param specie une espèce
+	 */
 	public static void set_evolution(String specie)
 	{
 		String specie_space = "";
@@ -126,6 +162,12 @@ public class Model
 		}
 	}
 
+	/**
+	 * Fixe l'évolution de l'espèce chargée en fonction de la précision du GeoHash
+	 * Nous n'utilisons pas cette fonction
+	 * @param specie une espèce
+	 * @param geohash_precision la précision du GeoHash
+	 */
 	public static void set_evolution(String specie, int geohash_precision)
 	{
 		String specie_space = "";
@@ -149,7 +191,12 @@ public class Model
 		}
 	}
 
-	// Occurrences de l'espèce chargée
+	/**
+	 * Récupère le nombre d'occurrences de l'espèce chargée pour des coordonnées gps données
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @return le nombre d'occurrences
+	 */
 	public static int get_local_occurrence(double lat, double lon)
 	{
 		int res = 0;
@@ -166,6 +213,14 @@ public class Model
 		return res;
 	}
 
+	/**
+	 * Récupère le nombre d'occurrences de l'espèce chargée lors de l'évolution à partir d'une année donnée
+	 * (pendant 5 ans), et pour des coordonnées gps données
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @param year l'année de début
+	 * @return le nombre d'occurrences
+	 */
 	public static int get_evolution_occurrence(double lat, double lon, int year)
 	{
 		int res = 0;
@@ -182,7 +237,15 @@ public class Model
 		return res;
 	}
 
-	// Occurrences d'une espèce de l'api à certaines coordonnées
+	/**
+	 * Récupère le nombre d'occurrences d'une espèce à partir d'une requête http
+	 * Nous n'utilisons pas cette fonction, voir get_local_occurrence et set_collection
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @param geohash_precision la précision du GeoHash
+	 * @param specie l'espèce
+	 * @return le nombre d'occurrences
+	 */
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie)
 	{
 		int res = 0;
@@ -198,8 +261,17 @@ public class Model
 	}
 
 
-	// Occurrences d'une espèce de l'api à certaines coordonnées et pendant un intervalle de temps
-	// A changer au besoin : start_date et end_date doivent être entrées de la manière suivante : YYYY-MM-DD
+	/**
+	 * Récupère le nombre d'occurrences d'une espèce à partir d'une requête http et pour un intervalle de temps
+	 * Nous n'utilisons pas cette fonction, voir get_local_occurrence, set_collection et set_date
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @param geohash_precision la précision du GeoHash
+	 * @param specie l'espèce
+	 * @param start_date le début de l'intervalle
+	 * @param end_date la fin de l'intervalle
+	 * @return
+	 */
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date, String end_date)
 	{
 		int res = 0;
@@ -215,7 +287,18 @@ public class Model
 		return res;
 	}
 
-	// Occurrences d'une espèce de l'api à certaines coordonnées et pour plusieurs intervalles de temps
+	/**
+	 * Récupère les nombres d'occurrences d'une espèce à partir d'une requête http et pour plusieurs intervalles de temps
+	 * Nous n'utilisons pas cette fonction, voir get_evolution_occurrence et set_evolution
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @param geohash_precision la précision du GeoHash
+	 * @param specie l'espèce
+	 * @param start_date le début de l'intervalle
+	 * @param interval taille de l'intervalle
+	 * @param interval_nb nombre d'intervalles
+	 * @return tableau contenant le nombre d'occurrences pour chaque intervalle
+	 */
 	public static ArrayList<Integer> get_occurrence(double lat, double lon, int geohash_precision, String specie,
 		String start_date, String interval, int interval_nb)
 	{
@@ -246,6 +329,11 @@ public class Model
 		return res;
 	}
 
+	/**
+	 * Récupère la liste des espèces repérées à un GeoHash donné
+	 * @param geohash le GeoHash
+	 * @return la liste des espèces
+	 */
 	public static ArrayList<String> get_species_from_geohash(String geohash)
 	{
 		String url = "https://api.obis.org/v3/occurrence?";
@@ -258,6 +346,11 @@ public class Model
 		return Read.parseNamesJson(Read.readJsonFromUrl(url));
 	}
 
+	/**
+	 * Récupère la liste des détails d'observations de chaque espèce observée à un GeoHash donné
+	 * @param geohash le GeoHash
+	 * @return la liste des détails d'observations
+	 */
 	public static ArrayList<Observation> get_observation(String geohash)
 	{
 		String url = "https://api.obis.org/v3/occurrence?";
@@ -273,17 +366,33 @@ public class Model
 		return Read.parseObservationJson(Read.readJsonFromUrl(url));
 	}
 
+	/**
+	 * Récupère la liste des espèces dont le nom commence par une chaîne de caractères donnée
+	 * @param begin la chaîne de caractères
+	 * @return la liste des espèces
+	 */
 	public static ArrayList<String> get_species(String begin)
 	{
 		String url = "https://api.obis.org/v3/taxon/complete/verbose/" + begin;
 		return Read.parseVerboseJson(Read.readJsonArrayFromUrl(url));
 	}
 
+	/**
+	 * Récupère le nombre maximal d'occurrences sur un GeoHash d'une espèce
+	 * @return le nombre maximal d'occurrences
+	 */
 	public static int get_max_occurrence()
 	{
 		return species_feature_collection.get_max_occurrence();
 	}
 
+	/**
+	 * Convertit une coordonnées GPS en GeoHash
+	 * @param lat la latitude
+	 * @param lon la longitude
+	 * @param precision la précision du GeoHash
+	 * @return le GeoHash
+	 */
 	public static String gps_to_geohash(float lat, float lon, float precision)
 	{
 		String base32 = "0123456789bcdefghjkmnpqrstuvwxyz";
