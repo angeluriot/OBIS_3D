@@ -2,6 +2,7 @@ package application;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -40,7 +41,7 @@ public class App implements Initializable
 	private Pane pane3D;
 
 	@FXML
-	private HBox hbox;
+	public HBox hbox;
 
 	@FXML
 	private Label max;

@@ -52,6 +52,7 @@ public class Earth
 	private static AnchorPane anchor_pane;
 	private static ListView list_view;
 	private static ListView secondary_list_view;
+	private static ArrayList<Observation> observations;
 	private static HBox hbox;
 	private static boolean first_click = true;
 
@@ -85,8 +86,6 @@ public class Earth
 		squares.setDisable(true);
 		squares.setFocusTraversable(true);
 		earth.getChildren().add(squares);
-
-		meshViews[0].setTranslateX(-1);
 
 		// Add a camera group
 		PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -125,6 +124,7 @@ public class Earth
 			{
 				first_click = true;
 				anchor_pane.getChildren().remove(list_view);
+				anchor_pane.getChildren().remove(secondary_list_view);
 
 				PickResult pick_result = event.getPickResult();
 				Point3D space_coord = pick_result.getIntersectedPoint();
@@ -144,7 +144,10 @@ public class Earth
 			if (event.getEventType() == MouseEvent.MOUSE_PRESSED)
 			{
 				if (!first_click)
+				{
 					anchor_pane.getChildren().remove(list_view);
+					anchor_pane.getChildren().remove(secondary_list_view);
+				}
 
 				else
 					first_click = false;
@@ -154,22 +157,59 @@ public class Earth
 
 	public static void click_on_data(MouseEvent event, float lat, float lon)
 	{
-		ArrayList<Observation> observations = Model.get_observation(Model.gps_to_geohash(lat, lon, 3));
+		observations = Model.get_observation(Model.gps_to_geohash(lat, lon, 3));
 		ObservableList<String> list = FXCollections.observableArrayList();
 
 		if (observations.size() > 0)
 		{
-			for (Observation observation : observations)
-				list.add(observation.get_scientific_name());
+			int number = 1;
+
+			for (int i = 0; i < observations.size(); i++)
+			{
+				number = 1;
+
+				for (int j = 0; j < i; j++)
+					if (observations.get(i).get_scientific_name().equals(observations.get(j).get_scientific_name()))
+						number += 1;
+
+				list.add(observations.get(i).get_scientific_name() + (number > 1 ? " (" + number + ")" : ""));
+			}
 
 			list_view = new ListView(list);
 			list_view.setFixedCellSize(30);
 			list_view.setStyle("-fx-font-size : 11pt");
 			list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
-			list_view.setPrefWidth(300);
+			list_view.setPrefWidth(250);
 			list_view.setTranslateX(event.getSceneX());
 			list_view.setTranslateY(event.getSceneY());
 			anchor_pane.getChildren().add(list_view);
+			list_view.toFront();
+
+			list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+			{
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+				{
+					anchor_pane.getChildren().remove(secondary_list_view);
+
+					ObservableList<String> secondary_list = FXCollections.observableArrayList();
+					secondary_list.add(observations.get(list_view.getSelectionModel().getSelectedIndex()).get_scientific_name());
+					secondary_list.add(observations.get(list_view.getSelectionModel().getSelectedIndex()).get_order());
+					secondary_list.add(observations.get(list_view.getSelectionModel().getSelectedIndex()).get_super_class());
+					secondary_list.add(observations.get(list_view.getSelectionModel().getSelectedIndex()).get_recorded_by());
+					secondary_list.add(observations.get(list_view.getSelectionModel().getSelectedIndex()).get_specie());
+
+					secondary_list_view = new ListView(secondary_list);
+					secondary_list_view.setFixedCellSize(30);
+					secondary_list_view.setStyle("-fx-font-size : 11pt");
+					secondary_list_view.setPrefHeight(Math.min(306, secondary_list.size() * 30 + 6));
+					secondary_list_view.setPrefWidth(250);
+					secondary_list_view.setTranslateX(list_view.getTranslateX() + list_view.getPrefWidth());
+					secondary_list_view.setTranslateY(list_view.getTranslateY() + list_view.getSelectionModel().getSelectedIndex() * 30);
+					anchor_pane.getChildren().add(secondary_list_view);
+					secondary_list_view.toFront();
+				}
+			});
 		}
 	}
 
@@ -187,19 +227,19 @@ public class Earth
 			list_view.setFixedCellSize(30);
 			list_view.setStyle("-fx-font-size : 11pt");
 			list_view.setPrefHeight(Math.min(306, list.size() * 30 + 6));
-			list_view.setPrefWidth(300);
+			list_view.setPrefWidth(250);
 			list_view.setTranslateX(event.getSceneX());
 			list_view.setTranslateY(event.getSceneY());
-
 			anchor_pane.getChildren().add(list_view);
+			list_view.toFront();
 
-			list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-
+			list_view.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+			{
 				@Override
-				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+				{
 					Menu.combobox.setValue(newValue);
 					Menu.combobox.fireEvent(new ActionEvent());
-					anchor_pane.getChildren().remove(list_view);
 				}
 			});
 		}
@@ -207,6 +247,9 @@ public class Earth
 
 	public static void update(int year)
 	{
+		anchor_pane.getChildren().remove(list_view);
+		anchor_pane.getChildren().remove(secondary_list_view);
+
 		squares.getChildren().clear();
 		show_data_squares(squares, year);
 
@@ -282,8 +325,6 @@ public class Earth
 		affine.append(Math3D.lookAt(from, to, yDir));
 		group.getTransforms().setAll(affine);
 		group.getChildren().addAll(box);
-		group.setTranslateX(-1);
-
 		parent.getChildren().addAll(group);
 	}
 

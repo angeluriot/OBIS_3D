@@ -13,55 +13,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="hbox" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.App">
+<HBox fx:id="hbox" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" nodeOrientation="RIGHT_TO_LEFT" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.App">
    <children>
-      <AnchorPane fx:id="anchor_pane" prefHeight="200.0" prefWidth="200.0">
-         <children>
-            <Pane fx:id="pane3D" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #26282B;" />
-            <VBox alignment="TOP_CENTER">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Légende :" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
-                  </Label>
-                  <HBox prefHeight="15.0" prefWidth="120.0">
-                     <children>
-                        <Pane style="-fx-background-color: #FF0000;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FF2700;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FF4B00;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FF6F00;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FF9300;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FFB700;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FFDB00;" HBox.hgrow="ALWAYS" />
-                        <Pane style="-fx-background-color: #FFFF00;" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <Label fx:id="min" prefWidth="60.0" text="1" textFill="WHITE">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="max" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="60.0" text="10" textAlignment="RIGHT" textFill="WHITE">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
-            </VBox>
-         </children>
-      </AnchorPane>
-      <VBox fx:id="menu" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="300.0">
+      <VBox fx:id="menu" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefWidth="300.0">
          <children>
             <Label text="Nom de l'espèce :" textAlignment="CENTER">
                <font>
@@ -147,5 +101,51 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
       </VBox>
+      <AnchorPane fx:id="anchor_pane" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Pane fx:id="pane3D" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #26282B;" />
+            <VBox alignment="TOP_CENTER">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="Légende :" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <HBox prefHeight="15.0" prefWidth="120.0">
+                     <children>
+                        <Pane style="-fx-background-color: #FF0000;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FF2700;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FF4B00;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FF6F00;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FF9300;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FFB700;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FFDB00;" HBox.hgrow="ALWAYS" />
+                        <Pane style="-fx-background-color: #FFFF00;" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="min" prefWidth="60.0" text="1" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="max" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefWidth="60.0" text="10" textAlignment="RIGHT" textFill="WHITE">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
    </children>
 </HBox>
