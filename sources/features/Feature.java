@@ -11,11 +11,19 @@ public class Feature
 		this.zone = zone;
 	}
 
+	/**
+	 * Récupère le nombre d'occurrences de l'espèce dans l'observation
+	 * @return le nombre d'occurrences
+	 */
 	public final int get_number()
 	{
 		return number;
 	}
 
+	/**
+	 * Récupère la zone de l'observation
+	 * @return la zone
+	 */
 	public final Zone get_zone()
 	{
 		return zone;

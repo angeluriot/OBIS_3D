@@ -17,26 +17,46 @@ public class Observation
 		this.specie = specie;
 	}
 
+	/**
+	 * Récupère le nom scientifique de l'espèce
+	 * @return le nom scientifique
+	 */
 	public final String get_scientific_name()
 	{
 		return scientific_name;
 	}
 
+	/**
+	 * Récupère l'ordre de l'espèce
+	 * @return l'ordre
+	 */
 	public final String get_order()
 	{
 		return order;
 	}
 
+	/**
+	 * Récupère la super classe de l'espèce
+	 * @return la super classe
+	 */
 	public final String get_super_class()
 	{
 		return super_class;
 	}
 
+	/**
+	 * Récupère le nom de l'organisme qui a observé l'espèce
+	 * @return le nom de l'organisme
+	 */
 	public final String get_recorded_by()
 	{
 		return recorded_by;
 	}
 
+	/**
+	 * Récupère le nom de l'espèce
+	 * @return le nom de l'espèce
+	 */
 	public final String get_specie()
 	{
 		return specie;

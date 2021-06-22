@@ -10,11 +10,6 @@ public class Time
 	private int second;
 	private String yyyymmdd;
 
-	public Time()
-	{
-		this(0, 0, 0, 0, 0, 0);
-	}
-
 	public Time(String yyyymmdd)
 	{
 		char[] yyyymmdd_array = yyyymmdd.toCharArray();
@@ -35,22 +30,6 @@ public class Time
 		this.yyyymmdd = yyyymmdd;
 	}
 
-	public Time(int day, int month, int year)
-	{
-		this(day, month, year, 0, 0, 0);
-	}
-
-	public Time(int day, int month, int year, int hour, int minute, int second)
-	{
-		this.day = day;
-		this.month = month;
-		this.year = year;
-		this.hour = hour;
-		this.minute = minute;
-		this.second = second;
-		yyyymmdd = year + "-" + month + "-" + day;
-	}
-
 	public Time(Time other)
 	{
 		day = other.get_day();
@@ -62,36 +41,64 @@ public class Time
 		yyyymmdd = other.get_date();
 	}
 
+	/**
+	 * Récupère le jour
+	 * @return le jour
+	 */
 	public final int get_day()
 	{
 		return day;
 	}
 
+	/**
+	 * Récupère le mois
+	 * @return le mois
+	 */
 	public final int get_month()
 	{
 		return month;
 	}
 
+	/**
+	 * Récupère l'année
+	 * @return l'année
+	 */
 	public final int get_year()
 	{
 		return year;
 	}
 
+	/**
+	 * Récupère l'heure
+	 * @return l'heure
+	 */
 	public final int get_hour()
 	{
 		return hour;
 	}
 
+	/**
+	 * Récupère la minute
+	 * @return la minute
+	 */
 	public final int get_minute()
 	{
 		return minute;
 	}
 
+	/**
+	 * Récupère la seconde
+	 * @return la seconde
+	 */
 	public final int get_second()
 	{
 		return second;
 	}
 
+	/**
+	 * Récupère la date sous forme de String
+	 * @return la date sous forme de String
+	 */
 	public final String get_date() { return yyyymmdd; }
 
 	public void add_interval(Time interval)
@@ -145,6 +152,11 @@ public class Time
 		yyyymmdd += (day);
 	}
 
+	/**
+	 * Opérateur égal
+	 * @param other autre instance de Time
+	 * @return le booléen qui indique si les deux instances sont égales
+	 */
 	public boolean equals(Time other)
 	{
 		return day == other.day && month == other.month && year == other.year &&

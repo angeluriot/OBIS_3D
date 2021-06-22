@@ -11,6 +11,10 @@ public class Zone
 		coords = new Point2D[]{ point_1, point_2, point_3, point_4 };
 	}
 
+	/**
+	 * Récupère les coordonnées de la zone
+	 * @return les coordonnées
+	 */
 	public final Point2D[] get_coords()
 	{
 		return coords;

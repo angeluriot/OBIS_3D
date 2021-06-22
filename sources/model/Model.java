@@ -270,7 +270,7 @@ public class Model
 	 * @param specie l'espèce
 	 * @param start_date le début de l'intervalle
 	 * @param end_date la fin de l'intervalle
-	 * @return
+	 * @return le nombre d'occurrences
 	 */
 	public static int get_occurrence(double lat, double lon, int geohash_precision, String specie, String start_date, String end_date)
 	{

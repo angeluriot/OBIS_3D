@@ -47,11 +47,19 @@ public class FeatureCollection
 		this.max_occurrence = max_occurrence;
 	}
 
+	/**
+	 * Récupère le nom de l'espèce
+	 * @return le nom de l'espèce
+	 */
 	public final String get_name()
 	{
 		return name;
 	}
 
+	/**
+	 * Récupère les observations de l'espèce
+	 * @return les observations de l'espèce
+	 */
 	public final Feature[] get_features()
 	{
 		return features;
