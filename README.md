@@ -23,7 +23,7 @@ A 3D application showing data from the Ocean Biodiversity Information System (OB
 
 <br/>
 
-# Use
+# Features
 
 * The program can read a .json file or download the data from the Internet
 
