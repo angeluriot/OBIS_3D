@@ -7,6 +7,8 @@
 
 <br/>
 
+⚠️ This project was made for school with a deadline and I chose to leave it as it was at the time of submission ⚠️
+
 A 3D application showing data from the Ocean Biodiversity Information System (OBIS).
 
 <br/>
